@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+================================================================================
+/**
+ * Main XUL file.
+ *
+ * @filename S.xul
+ * @$LastChangedDate: 2013-10-24
+ * @author Paul Heil <pheil@tenneco.com>
+ * @copyright Paul Heil
+ * @license Mozilla Public License Version 1.1
+*/
+================================================================================
+-->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://partnumbersearch/skin/ViewerOverlay.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://partnumbersearch/locale/filesearch-toolbar.dtd">
+<window id="viewerWindow"
+	sizemode="normal"
+	disablefastfind="true"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	onload="FSviewer_s.sview_setup();"
+	title="Viewer">
+	<script src="chrome://partnumbersearch/content/_.js"/>
+	<html:head>
+	<html:link rel="icon" height="16" width="16" href="chrome://partnumbersearch/skin/TS.png" style="display:none"/>
+	</html:head>
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="RTC-string-bundle" src="chrome://partnumbersearch/locale/Viewer.properties"/>
+    </stringbundleset>
+        
+<!-- Viewer UI Start -->
+<hbox id="thebody_full" align="center" flex="1">
+    <vbox id="full" flex="1">
+        <html:object name="FULLPDF" id="FULLdwg" data="" type="application/pdf" style="width:100%;height:100%;"></html:object>
+    </vbox> 
+</hbox>
+
+</window>

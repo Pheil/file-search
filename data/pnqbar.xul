@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/"?>
+<?xml-stylesheet href="chrome://partnumbersearch/skin/overlay.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://partnumbersearch/locale/filesearch-toolbar.dtd">
+<overlay id="pnqbar-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml">
+	<script type="application/javascript" src="chrome://partnumbersearch/content/pnqbar.js"/>
+	<script type="application/javascript" src="chrome://partnumbersearch/content/whitelist.js"/>
+	
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="filesearchtoolbar-string-bundle" src="chrome://partnumbersearch/locale/filesearchtoolbar.properties"/>
+    </stringbundleset>
+
+	<toolbarpalette id="BrowserToolbarPalette">
+		<toolbarbutton id="FS-button" class="toolbarbutton-1 chromeclass-toolbar-additional" label="File Search" tooltiptext="Toggle File Search Toolbar" oncommand="FSToolBar.FileSearchBar_toggleToolbar()"/>
+		
+		<toolbarbutton id="fs_logo" context="RCmenu" label="Tenneco" tooltiptext="&tb.logo.tiptext;" onclick="FSToolBar.FSHome(event.button)" class="toolbarbutton-1 chromeclass-toolbar-additional" overflows="true"/>
+		
+		<!-- Web Conference Button
+		<toolbarbutton id="cam-button" class="toolbarbutton-1 chromeclass-toolbar-additional" label="Tenneco RTC" tooltiptext="Start Tenneco Video Conference" oncommand="FSToolBar.ToggleCAM()" /> -->
+		
+		<!-- Email Button -->
+		<toolbarbutton id="email-button" class="toolbarbutton-1 chromeclass-toolbar-additional" label="Email" tooltiptext="Email current PDF" oncommand="FSToolBar.Email()" overflows="true"/>
+		
+		<!-- Download Button -->
+		<toolbarbutton id="DL-button" class="toolbarbutton-1 chromeclass-toolbar-additional" label="Download" tooltiptext="Download current PDF" oncommand="FSToolBar.Download()" overflows="true"/>
+		
+		<toolbaritem id="search-group-1" onmouseover="FSToolBar.ArrCheck();FSToolBar.ToolBarFix()" label="&tb.sg1.label;" class="panel-wide-item">
+		    <!-- Select search method -->
+		    <toolbarbutton id="AdvancedMenu" tooltiptext="&tb.drop.parts.tiptext;" type="menu">
+		    <menupopup editable="false" crop="none" id="AdvancedMenulist" onpopupshowing="FSToolBar.DropdownUpdate()" oncommand="javascript:document.getElementById('search-terms2').focus(); ">
+      
+		        <menuitem label="&tb.drop.parts.label;" id="PNQ-lst-DropParts" class="menuitem-iconic" tooltiptext="&tb.drop.parts.tiptext;" oncommand="javascript:document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.parts.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 176px, 16px, 160px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('P');" />
+			      		
+		        <menuitem label="&tb.drop.tools.label;" id="PNQ-lst-DropTools" class="menuitem-iconic" tooltiptext="&tb.drop.tools.tiptext;" oncommand="javascript:document.getElementById('search-terms2').setAttribute('autocompletesearchparam', 'Tarray');document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.tools.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 16px, 16px, 0px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('T');" />
+		      		
+		        <menuitem label="&tb.drop.sk.label;" id="PNQ-lst-DropSketch" class="menuitem-iconic" tooltiptext="&tb.drop.sk.tiptext;" oncommand="javascript:document.getElementById('search-terms2').setAttribute('autocompletesearchparam', 'sketcharray');document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.sk.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 32px, 16px, 16px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('K');" />
+		      		
+		        <menuitem label="&tb.drop.ece.label;" id="PNQ-lst-DropCost" class="menuitem-iconic" tooltiptext="&tb.drop.ece.tiptext;" oncommand="javascript:document.getElementById('search-terms2').setAttribute('autocompletesearchparam', 'costarray');document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.ece.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 48px, 16px, 32px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('C');" />
+		      		
+		        <menuitem label="&tb.drop.ts.label;" id="PNQ-lst-DropTS" class="menuitem-iconic" tooltiptext="&tb.drop.ts.tiptext;" oncommand="javascript:document.getElementById('search-terms2').setAttribute('autocompletesearchparam', 'TSarray');document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.ts.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 64px, 16px, 48px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('S');" />
+		      		
+		        <menuitem label="&tb.drop.rfp.label;" id="PNQ-lst-DropRFP" class="menuitem-iconic" tooltiptext="&tb.drop.rfp.tiptext;" oncommand="javascript:document.getElementById('search-terms2').setAttribute('autocompletesearchparam', 'RFParray');document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.rfp.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 80px, 16px, 64px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('D');" />
+		      		
+		        <menuitem label="&tb.drop.ews.label;" id="PNQ-lst-DropEWS" class="menuitem-iconic" tooltiptext="&tb.drop.ews.tiptext;" oncommand="javascript:document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.ews.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 96px, 16px, 80px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('E');" />
+		      		
+		        <menuitem label="&tb.drop.ps.label;" id="PNQ-lst-DropPS" class="menuitem-iconic" tooltiptext="&tb.drop.ps.tiptext;" oncommand="javascript:document.getElementById('search-terms2').setAttribute('autocompletesearchparam', 'PSarray');document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.ps.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 112px, 16px, 96px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('R');" />
+	
+		        <menuitem label="&tb.drop.ms.label;" id="PNQ-lst-DropMS" class="menuitem-iconic" tooltiptext="&tb.drop.ms.tiptext;" oncommand="javascript:document.getElementById('search-terms2').setAttribute('autocompletesearchparam', 'MSarray');document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.ms.tiptext;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 128px, 16px, 112px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('M');" />
+	
+		        <menuitem label="&tb.drop.epf.label;" id="PNQ-lst-DropEPF" class="menuitem-iconic" tooltiptext="&tb.drop.epf.tiptext;" oncommand="javascript:document.getElementById('AdvancedMenu').setAttribute('tooltiptext', '&tb.drop.epf.label;');document.getElementById('AdvancedMenu').setAttribute('style','list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, 192px, 16px, 176px);min-width: 0em; max-width: 10em;');FSToolBar.searchType('F');" />
+		    </menupopup>
+		    </toolbarbutton> 
+
+		    <keyset>
+		        <key id="FS-key" modifiers="control,shift" key="Z" oncommand="FSToolBar.Shortcut_key();"/>
+		    </keyset>
+
+		    <!-- Search box -->
+		    <textbox id="search-terms2" onmousedown="FSToolBar.PasteGo(event.button);" timeout="250" maxrows="10" placeholder="&tb.searchbox.default;" type="autocomplete" autocompletesearch="fs-autocomplete" showcommentcolumn="true" sizetopopup="none" showimagecolumn="false" flex="1" autocompletesearchparam="customarray2b" tooltiptext="&tb.searchbox.tiptext;" maxlength="" size="30" onkeypress="FSToolBar.FSEnter(event.which);" onpaste="FSToolBar.FSPaste(event);" clickSelectsAll="true" key="FS-key"/>
+   
+		    <!-- Search button -->
+		    <toolbarbutton id="search-button" tooltiptext="&tb.sbutton.tiptext;" label="" oncommand="FSToolBar.FSdisplay('one');"/>
+
+		    <!-- File display progress -->
+            <image id="downloadstatus" src="chrome://global/skin/media/throbber.png" tooltiptext="&tb.meter.tiptext;" hidden="true"/>
+		</toolbaritem>
+		
+		<!-- Engineer Search -->
+		<toolbaritem id="search-group-2" label="&tb.sg2.label;" class="panel-wide-item">
+		    <toolbarbutton type="menu" id="AdvancedMenu2">
+		        <menupopup editable="false" crop="none" style="min-width: 13em; max-width: 13em;" id="AdvancedMenu2list">
+		            <menuitem label="&tb.endsearch.option1;" value="&tb.endsearch.option1b;" id="ENG1" type="radio" checked="true" oncommand="javascript:FSToolBar.phaseType('ALL');" />
+		            <menuitem label="&tb.endsearch.option2;" value="&tb.endsearch.option2b;" id="ENG2" type="radio" oncommand="javascript:FSToolBar.phaseType('OPEN+ALL');" />
+		            <menuitem label="&tb.endsearch.option3;" value="&tb.endsearch.option3b;" id="ENG3" type="radio" oncommand="javascript:FSToolBar.phaseType('OPEN+PROJECTS');" />
+		            <menuitem label="&tb.endsearch.option4;" value="&tb.endsearch.option4b;" id="ENG4" type="radio" oncommand="javascript:FSToolBar.phaseType('OPEN+PSO');" />
+		            <menuitem label="&tb.endsearch.option5;" value="&tb.endsearch.option5b;" id="ENG5" type="radio" oncommand="javascript:FSToolBar.phaseType('Analyzing');" />
+		            <menuitem label="&tb.endsearch.option6;" value="&tb.endsearch.option6b;" id="ENG6" type="radio" oncommand="javascript:FSToolBar.phaseType('Building');" />
+		            <menuitem label="&tb.endsearch.option7;" value="&tb.endsearch.option7b;" id="ENG7" type="radio" oncommand="javascript:FSToolBar.phaseType('Cancelled');" />
+		            <menuitem label="&tb.endsearch.option8;" value="&tb.endsearch.option8b;" id="ENG8" type="radio" oncommand="javascript:FSToolBar.phaseType('Closing');" />
+		            <menuitem label="&tb.endsearch.option9;" value="&tb.endsearch.option9b;" id="ENG9" type="radio" oncommand="javascript:FSToolBar.phaseType('Complete');" />
+		            <menuitem label="&tb.endsearch.option10;" value="&tb.endsearch.option10b;" id="ENG10" type="radio" oncommand="javascript:FSToolBar.phaseType('Creating');" />
+		            <menuitem label="&tb.endsearch.option11;" value="&tb.endsearch.option11b;" id="ENG11" type="radio" oncommand="javascript:FSToolBar.phaseType('Designing');" />
+		            <menuitem label="&tb.endsearch.option12;" value="&tb.endsearch.option12b;" id="ENG12" type="radio" oncommand="javascript:FSToolBar.phaseType('Distributing');" />
+		            <menuitem label="&tb.endsearch.option13;" value="&tb.endsearch.option13b;" id="ENG13" type="radio" oncommand="javascript:FSToolBar.phaseType('Engineering');" />
+		            <menuitem label="&tb.endsearch.option14;" value="&tb.endsearch.option14b;" id="ENG14" type="radio" oncommand="javascript:FSToolBar.phaseType('Reviewing');" />
+		            <menuitem label="&tb.endsearch.option15;" value="&tb.endsearch.option15b;" id="ENG15" type="radio" oncommand="javascript:FSToolBar.phaseType('Shipping');" />
+		            <menuitem label="&tb.endsearch.option16;" value="&tb.endsearch.option16b;" id="ENG16" type="radio" oncommand="javascript:FSToolBar.phaseType('Testing');" />
+		        </menupopup>
+		    </toolbarbutton>
+
+		    <!-- Engineer Query Search box -->    
+		    <textbox flex="1" id="engsearch" timeout="250" tooltiptext="&tb.engsearch.tiptext;" maxrows="15" placeholder="&tb.engsearch.default;" type="autocomplete" autocompletesearch="fs-autocomplete" showcommentcolumn="false" sizetopopup="none" showimagecolumn="false" autocompletesearchparam="customarray3" maxlength="" size="20" onkeypress="FSToolBar.ENG_enter(event.which);" clickSelectsAll="true" value="" persist="value" oninput="this.setAttribute('value', this.value);document.persist(this, 'value')"/>
+
+		    <!-- Engineer Query Search button -->
+		    <toolbarbutton id="search-button2" tooltiptext="&tb.ebutton.tiptext;" label="" flex="0" oncommand="FSToolBar.ENG_display();"/>
+		</toolbaritem>
+	</toolbarpalette>
+
+	<popupset>
+		<menupopup id="RCmenu">
+		 	<menuitem label="&rc.menu.option3;" oncommand="FSToolBar.FSOpenOptions()"/>
+		</menupopup>
+	</popupset>
+
+<!-- Toolbar -->
+<toolbox id="navigator-toolbox">
+	<toolbar context="toolbar-context-menu" flex="1" hidden="false" collapsed="false" overflowable="true" anchor="search-group-1"
+		    		class="chromeclass-toolbar" customizable="true" id="FileSearchBar" 
+		    		toolbarname="File Search Toolbar" mode="icons" iconsize="small" insertbefore="PersonalToolbar"
+		    		inherits="collapsed,hidden" persist="collapsed,hidden" defaultset="fs_logo,email-button,search-group-1,spring">
+
+	</toolbar>
+</toolbox>
+</overlay>

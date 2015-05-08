@@ -1,0 +1,120 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+/* ::::: SearchBox ::::: */
+
+#partnumber
+{
+-moz-appearance: none !important;
+margin: 0px 0px;
+padding: 2px;
+background-clip: padding-box;
+border: 1px solid ThreeDDarkShadow;
+border-radius: 8px;
+text-align: center;
+box-shadow: 0 1px 0 rgba(0,0,0,.1) inset,
+                 0 1px 0 rgba(255,255,255,.4);
+font-family:verdana;
+font-size: 30px;
+cursor: text;
+border-color: rgba(0,0,0,.25) rgba(0,0,0,.32) rgba(0,0,0,.37);
+}
+
+/* ::::: Part Number ::::: */
+#PN_saved
+{
+margin: 0px 0px !important; -moz-appearance: none !important;
+padding: 0px !important; -moz-appearance: none !important;
+background-clip: padding-box !important; -moz-appearance: none !important;
+border: 0px solid ThreeDDarkShadow !important; -moz-appearance: none !important;
+font-size: 22px !important; -moz-appearance: none !important;
+font-style: italic !important; -moz-appearance: none !important;
+text-align: center !important; -moz-appearance: none !important;
+cursor: text !important; -moz-appearance: none !important;
+background-color: rgba(0,0,0,0) !important; -moz-appearance: none !important;
+}
+
+/* ::::: EPF Note ::::: */
+#EPF_note
+{
+-moz-appearance: none !important;
+margin: 0px 0px;
+padding: 0px;
+background-clip: padding-box;
+border: 0px solid ThreeDDarkShadow;
+font-size: 22px;
+font-style: italic;
+color: red;
+text-align: center;
+
+}
+
+/* ::::: Close Button ::::: */
+#epf_close
+{
+background-image: -moz-image-rect(url('chrome://global/skin/icons/close.png'),0,60,16,48);
+background-repeat:no-repeat;
+width:16px;  
+height:16px;  
+}
+#epf_close:hover
+{
+background-image: -moz-image-rect(url('chrome://global/skin/icons/close.png'),0,32,16,16);
+}
+#epf_close:active
+{
+background-image: -moz-image-rect(url('chrome://global/skin/icons/close.png'),0,48,16,32);
+}
+
+
+/* ::::: File Link ::::: */
+#addy, #fname, #fldrname
+{
+-moz-appearance: none !important;
+margin: 0px 0px;
+padding: 0px;
+background-clip: padding-box;
+border: 0px solid ThreeDDarkShadow;
+font-size: 10px;
+font-style: italic;
+text-align: center;
+cursor: text;
+}
+
+/* ::::: Titles ::::: */
+
+#Tree_b, #Tree_cp, #Tree_c, #Tree_de, #Tree_dc, #Tree_pc
+{
+font-size: 25px;
+font-weight: bold;
+}
+
+/* ::::: File Count ::::: */
+
+#Tree_b_v, #Tree_cp_v, #Tree_c_v, #Tree_de_v, #Tree_dc_v, #Tree_pc_v
+{
+font-size: 15px;
+font-style: italic;
+color: blue;
+text-decoration: underline;
+cursor: pointer;
+}
+
+/* ::::: listbox ::::: */
+
+#List_b, #List_cp, #List_c, #List_de, #List_dc, #List_pc
+{
+-moz-appearance: none !important;
+  margin: 1px 1px;
+  border: 0px solid;
+  background-color: rgba(0,0,0,0);
+}
+#List_b:focus, #List_cp:focus, #List_c:focus, #List_de:focus, #List_dc:focus, #List_pc:focus {
+  background-color: rgba(0,0,0,0);
+}
+#List_b[selected="true"], #List_cp:focus[selected="true"], #List_c:focus[selected="true"], #List_de:focus[selected="true"], #List_dc:focus[selected="true"], #List_pc:focus[selected="true"] {
+  color: -moz-cellhighlighttext;
+}
+#List_b:focus > listitem[current="true"], #List_cp:focus > listitem[current="true"], #List_c:focus > listitem[current="true"], #List_de:focus > listitem[current="true"], #List_dc:focus > listitem[current="true"], #List_pc:focus > listitem[current="true"] {
+  background-color: green;
+}

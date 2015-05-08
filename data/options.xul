@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+ 
+<!DOCTYPE window SYSTEM "chrome://partnumbersearch/locale/filesearch-toolbar.dtd">
+ 
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <setting type="bool" pref="extensions.partnumbersearch.auto_hide" title="&pref.auto.hide1;" desc="&pref.auto.hide2;" />
+  <setting type="bool" pref="extensions.partnumbersearch.TabFocus" title="&pref.tab1a.heading;" desc="&pref.tab1a.option.label;" />
+  <setting type="bool" pref="extensions.partnumbersearch.WhiteList" title="&pref.tab1c.heading;" desc="&pref.tab1c.option.label;" />
+  <setting type="bool" pref="extensions.partnumbersearch.fav_icon" title="&pref.fav.icon1;" desc="&pref.fav.icon2;" />
+  <setting type="bool" pref="extensions.partnumbersearch.AdvancedEPF" title="&pref.tab3c.heading;" desc="&pref.tab3c.optiona;" />
+  <setting type="bool" pref="extensions.partnumbersearch.Part_array" title="&pref.tab2b.optiona.label;" onclick="this.prefManager = Components.classes['@mozilla.org/preferences-service;1']
+         .getService(Components.interfaces.nsIPrefService)
+         .getBranch('extensions.partnumbersearch.');
+var arraypref = this.prefManager.getBoolPref('Part_array');
+var superarray = this.prefManager.getBoolPref('Super_array');
+if(arraypref === true)
+    {
+        if(superarray === true)
+            {
+                this.prefManager.setBoolPref('Super_array',false);
+            }
+    }"/>
+  <setting type="bool" pref="extensions.partnumbersearch.Super_array" title="&pref.superarray.label;" onclick="this.prefManager = Components.classes['@mozilla.org/preferences-service;1']
+         .getService(Components.interfaces.nsIPrefService)
+         .getBranch('extensions.partnumbersearch.');
+var arraypref = this.prefManager.getBoolPref('Part_array');
+var superarray = this.prefManager.getBoolPref('Super_array');
+if(arraypref === false)
+    {
+        if(superarray === false)
+            {
+                this.prefManager.setBoolPref('Part_array',true);
+            }
+    }"/>
+  <!-- <setting type="bool" pref="extensions.partnumbersearch.rtc" title="&pref.rtc.1;" desc="&pref.rtc.2;"/> -->
+  
+  <!-- Search Suggestions type -->
+  <setting pref="extensions.partnumbersearch.Suggest" type="radio" title="&pref.tab1b.heading;">
+    <radiogroup>
+      <radio value="disabled" label="&pref.tab1b.optiona.label;" tooltip="ToolTip1"/>
+		<tooltip id="ToolTip1">
+		<image src="chrome://partnumbersearch/skin/NoSS.png"/>
+		<description value="&pref.tab1b.optiona.tiptext;"/>
+		</tooltip>
+      <radio value="simple" label="&pref.tab1b.optionb.label;" tooltip="ToolTip2"/>
+		<tooltip id="ToolTip2">
+		<image src="chrome://partnumbersearch/skin/SimpleSS.png"/>
+		<description value="&pref.tab1b.optionb.tiptext;"/>
+		</tooltip>
+      <radio value="advanced" label="&pref.tab1b.optionc.label;" tooltip="ToolTip3"/>
+		<tooltip id="ToolTip3">
+		<image src="chrome://partnumbersearch/skin/AdvancedSS.png"/>
+		<description value="&pref.tab1b.optionc.tiptext;"/>
+		</tooltip>
+    </radiogroup>
+    </setting>
+    
+    <!-- PDF Options -->
+    <setting type="bool" pref="extensions.partnumbersearch.PNQ-PDF1" title="&pref.tab3b.optiona;" />
+    <setting type="bool" pref="extensions.partnumbersearch.PNQ-PDF2" title="&pref.tab3b.optionb;" />
+    <setting type="bool" pref="extensions.partnumbersearch.PNQ-PDF3" title="&pref.tab3b.optionc;" />
+    <setting type="directory" pref="extensions.partnumbersearch.PDF-DIR" title="&pref.PDF.DIR;" desc="&pref.PDF.DIR.Desc;" />
+    
+    <!-- Drop Down List -->
+	<setting type="bool" pref="extensions.partnumbersearch.DropTools" title="&pref.tab2.optiona.label;" />
+    <setting type="bool" pref="extensions.partnumbersearch.DropSketch" title="&pref.tab2.optionb.label;" />
+	<setting type="bool" pref="extensions.partnumbersearch.DropCost" title="&pref.tab2.optionc.label;" />
+	<setting type="bool" pref="extensions.partnumbersearch.DropTS" title="&pref.tab2.optiond.label;" />
+	<setting type="bool" pref="extensions.partnumbersearch.DropRFP" title="&pref.tab2.optione.label;" />
+	<setting type="bool" pref="extensions.partnumbersearch.DropEWS" title="&pref.tab2.optionf.label;" />
+	<setting type="bool" pref="extensions.partnumbersearch.DropPS" title="&pref.tab2.optiong.label;" />
+	<setting type="bool" pref="extensions.partnumbersearch.DropMS" title="&pref.tab2.optionh.label;" />
+    <setting type="bool" pref="extensions.partnumbersearch.DropEPF" title="&pref.tab2.optionj.label;" />
+    
+</vbox>

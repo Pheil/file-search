@@ -1,0 +1,47 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+/* ::::: LH/RH Sides ::::: */
+
+#left
+{
+background:#565656;
+height:100%;
+position:absolute;
+top:0px;
+left:0px;
+width:50%;
+}
+#right
+{
+background:#565656;
+height:100%;
+position:absolute;
+margin-top:0px;
+margin-right:0px;
+margin-left:50%;
+width:50%;
+}
+#thebody
+{
+position:absolute;
+background:#ffffff;
+height:100%;
+width:100%;
+}
+#thebody_full
+{
+position:absolute;
+background:#ffffff;
+height:100%;
+width:100%;
+}
+#full
+{
+background:#565656;
+height:100%;
+position:absolute;
+top:0px;
+left:0px;
+width:100%;
+}

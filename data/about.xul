@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://partnumbersearch/locale/filesearch-toolbar.dtd">
+<window class="dialog"
+	title="&about.title;"
+	orient="vertical"
+	autostretch="always"
+	onload="sizeToContent()"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script src="chrome://partnumbersearch/content/about.js"/>
+<groupbox align="center" orient="horizontal">
+<vbox>
+  <text value="File Search" style="font-weight: bold; font-size: x-large;"/>
+  <text value="&about.rel.version;"/>
+  <separator class="thin"/>
+  <text value="&about.created;" style="font-weight: bold;"/>
+  <text value="&about.creator;" style="cursor:pointer;" tooltiptext="&about.money;" class="url"
+        onclick="db_openLink('Notes://MAIL8/86256EFA004D0DC7/85255E01001356A8852554C200753106/51DB9F87150130E186256F8E00620E28');"/>
+  <separator class="thin"/>
+  <text value="&about.homepage;" style="font-weight: bold;"/>
+  <text style="cursor:pointer;" value="http://170.64.172.81/scripts/FileSearch/"
+        class="url"
+        onclick="db_openLink('http://170.64.172.81/scripts/FileSearch/');" tooltiptext="&about.homepage.tiptext;"/>
+  <separator class="thin"/>
+  <text value="&about.email;" style="font-weight: bold;"/>
+  <text value="&about.email.value;" />
+</vbox>
+<spring flex="1"/>
+<image src="chrome://partnumbersearch/skin/about.png"/>
+
+</groupbox>
+<spring flex="1"/>
+<hbox flex="0" style="background-color:#f1f1ec;-moz-border-radius:4px; border:1px solid #b2b2b2;">
+  <vbox>
+	<spacer flex="1"/>
+  </vbox>
+  <vbox>
+	<description></description>
+	<description></description>
+  </vbox>
+  <vbox align="center" flex="1">
+  <hbox>
+  <text value="&about.rel.label;" style="font-weight: bold;"/>
+    </hbox>
+  <hbox>
+  <text value="&about.rel.date;"/>
+  </hbox>
+  </vbox>
+</hbox>
+  <hbox>
+  <spacer flex="1"/>
+   <button label="Close" oncommand="window.close();"/>
+  </hbox>
+</window>

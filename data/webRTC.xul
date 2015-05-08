@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+================================================================================
+/**
+ * Main XUL file.
+ *
+ * @filename webRTC.xul
+ * @$LastChangedDate: 2013-03-11
+ * @author Paul Heil <pheil@tenneco.com>
+ * @copyright Paul Heil
+ * @license Mozilla Public License Version 1.1
+*/
+================================================================================
+-->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://partnumbersearch/skin/RTCoverlay.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://partnumbersearch/locale/filesearch-toolbar.dtd">
+<window id="rtcWindow"
+	sizemode="normal"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	onload="fs_RTC.startup();" title="WebRTC">
+	<script src="chrome://partnumbersearch/content/RTC/webRTC.js"/>
+	<!-- <script src="chrome://partnumbersearch/content/RTC/togetherjs.js"/> -->
+	<!-- <script src="https://togetherjs.com/togetherjs.js"/> -->
+	
+	<html:link rel="icon" href="chrome://partnumbersearch/skin/addons.ico" style="display:none"/>
+	
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="RTC-string-bundle" src="chrome://partnumbersearch/locale/RTC.properties"/>
+    </stringbundleset>
+        
+<!-- webRTC UI Start -->
+	
+<vbox align="center">
+	<stack>
+	    <hbox>
+		    <image id="App_logo" src="chrome://partnumbersearch/skin/RTCLogo.png" tooltiptext="Logo"/>
+	    </hbox>
+	</stack>
+	
+	<hbox align="center" flex="0">
+		<textbox id="confname" size="50" clickSelectsAll="true" placeholder="Meeting Code"/>
+	</hbox>
+
+    <!-- <button id="collaborate" label="Collaborate" type="button" style="-moz-appearance: none;background-color: green;color:#000;font: bold 90% 'trebuchet ms',helvetica,sans-serif;border: 1px solid;border-color: #111;"/>
+	<script>
+	    document.getElementById("collaborate")
+		 .addEventListener("click", TogetherJS, false);
+	</script> -->
+		 
+	<html:canvas id="thesketch" style="height: 400px; width: 600px; border: 1px solid #000"></html:canvas>
+</vbox>	
+</window>
