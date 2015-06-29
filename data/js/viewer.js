@@ -1,41 +1,33 @@
-var FSviewer = {
-    prefManager: null,
-    PN_saved_a: null,
-    PN_saved_b: null,
+    var link = document.createElement('link');
+    link.setAttribute('rel', 'shortcut icon');
+    link.setAttribute('href', 
 
-dview_setup: function() 
- {
-    var prefManager = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-    var PN_saved_a = prefManager.getCharPref("extensions.partnumbersearch.Part_Number_a");
-    var PN_saved_b = prefManager.getCharPref("extensions.partnumbersearch.Part_Number_b");
-    document.title = PN_saved_a + ' & ' + PN_saved_b;
+    // Defines the picture to use for icon
+    'data:image/x-icon;base64,AAABAAIAEBAAAAEACABoBQAAJgAAACAgAAABAAgAqAgAAI4FAAAoAAAAEAAAACAAAAABAAgAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAA%2F2aZZv%2F%2F%2F%2F%2F%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwICAgICAgICAgMDAwICAgICAgICAgICAgIDAwMCAgICAgICAgICAgICAwMDAgICAgICAgICAgICAgMDAwICAgICAgICAgICAgIDAwMCAgICAgICAgICAgICAwMDAgICAgICAgICAgICAgMDAwICAgICAgICAgIDAwMDAwMDAwMCAgICAgICAwMDAwMDAwMDAgECAgICAgMDAwMDAwMDAwIBAQECAgICAgICAgICAgICAQEBAQECAgICAgICAgICAgEBAQEBAQEBAQICAgICAgIBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAACAAAABAAAAAAQAIAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAP9mmWb%2F%2F%2F%2F%2F%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8AAAD%2FAAAA%2FwAAAP8CAgICAgICAgICAgICAgICAgICAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgIDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgIDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgIDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgIDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAwMDAwMDAgICAgICAgICAgICAgICAgICAgICAgICAgIDAwMDAwMCAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMDAwICAgICAgICAgICAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwICAgICAgICAgICAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwICAgICAgICAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAgICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCAgICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMDAwMDAgICAgICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIBAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgEBAQICAgICAgICAgICAgICAgICAgICAgICAgICAgICAQEBAQEBAQICAgICAgICAgICAgICAgICAgICAgICAgIBAQEBAQEBAQEBAQICAgICAgICAgICAgICAgICAgICAgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA%3D');
 
-    // Get folders
-    PN_saved_a = FSviewer.folder_check(PN_saved_a);
-    PN_saved_b = FSviewer.folder_check(PN_saved_b);
+    // Sets dimensions of icon. 16px x 16px is standard
+    link.setAttribute('height', '16px');
+    link.setAttribute('width', '16px');
 
-    document.getElementById("LHdwg").setAttribute("data", PN_saved_a);
-    document.getElementById("LHdwg").QueryInterface(Components.interfaces.nsIObjectLoadingContent).playPlugin();   // Forge enable plugin
-    document.getElementById("RHdwg").setAttribute("data", PN_saved_b);
-    document.getElementById("RHdwg").QueryInterface(Components.interfaces.nsIObjectLoadingContent).playPlugin();   // Forge enable plugin
- },
-folder_check: function(e) 
- {
+    // Retrieves the <head> tag
+    var head = document.getElementsByTagName('head')[0];
+
+    // Appends the html from the link variable into the head  
+    head.appendChild(link);
+    
+function folder_check(e) {
     var ttp1 = "http://millap01.na.ten/";
     var ttp3 = ".pdf#navpanes=0";
 
-        //var prefManager = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-        //var AdvSelection = prefManager.getCharPref("Part_Num_type");     // This gets the drop down item selected.
         var termcount = e.length;                                        // Count number of characters to determine folder group
         var termcode = String(e).substring(0,1);                         // Extract first 1 digit of search term
         var termcode2 = String(e).substring(0,2);                        // Extract first 2 digits of search term
         var termcode2b =  String(e).substring(2,4);                      // Extract third and fourth digits of search term 
         var termcode3 = String(e).substring(0,3);                        // Extract first 3 digits of search term
-        //var termcode5 = String(e).substring(0,5);                        // Extract first 5 digits of search term (unused)
         var termcode6 = String(e).substring(5,6);                        // Extract the sixth character for use when full 11 digit code A series is entered
         var termcode7 = String(e).substring(5,11);                       // Extract non GT part of inputed number when accidental entry for A series
         var termcode4 = String(e).substring(4,5);                        // Extract the character that would indicate if it is a B series number
-        var folder = "UNKNOWN";                                                   // Sets initial folder value, for error checking
+        var folder = "UNKNOWN";                                          // Sets initial folder value, for error checking
             // Start Part Code
             if (termcount == 6)
     {
@@ -207,5 +199,25 @@ folder_check: function(e)
     var e = ttp1 + folder + e + ttp3;
  
      return e;
- },
- };
+}
+    
+sendAsyncMessage("ready");
+addMessageListener("search", function(array) {
+    var searcharray = array.data;
+    var PN_saved_a = searcharray[1];
+    var PN_saved_b = searcharray[0];
+
+    document.title = PN_saved_a + ' & ' + PN_saved_b;
+
+    // Get folders
+    PN_saved_a = folder_check(PN_saved_a);
+    PN_saved_b = folder_check(PN_saved_b);
+
+    document.getElementById("LHdwg").setAttribute("data", PN_saved_a);
+    document.getElementById("RHdwg").setAttribute("data", PN_saved_b);
+    document.getElementById("LHdwg").QueryInterface(Components.interfaces.nsIObjectLoadingContent).playPlugin();   // Forge enable plugin
+    document.getElementById("RHdwg").QueryInterface(Components.interfaces.nsIObjectLoadingContent).playPlugin();   // Forge enable plugin
+    
+});
+
+

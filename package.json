@@ -7,21 +7,39 @@
   "description": "Enter file names to easily display the file.  Works for the following files:  Drawing files (Parts), Costs, Specs, Tools, Sketches, Test Specs, Process Specs, Material Specs, Worksheets, Electronic Part Files and RFPs",
   "main": "index.js",
   "author": "Paul Heil",
+  "permissions": {
+    "cross-domain-content": ["http://170.64.172.81/", "http://millap01.na.ten/"]
+  },
   "engines": {
     "firefox": ">=38.0a1"
   },
   "license": "MIT",
     "preferences": [{
-        "name": "TabFocus",
-        "title": "Some preference title",
-        "type": "bool",
-        "value": true
+        "name": "Part_Number",
+        "title": "Last search string",
+        "type": "string",
+        "value": "",
+        "hidden": true
     },
     {
-        "description": "How many of them we have.",
-        "name": "myInteger",
-        "type": "integer",
-        "value": 8,
-        "title": "How Many?"
+        "name": "Part_Number_a",
+        "title": "Dual View file A",
+        "type": "string",
+        "value": "",
+        "hidden": true
+    },
+    {
+        "name": "Part_Number_b",
+        "title": "Dual View file B",
+        "type": "string",
+        "value": "",
+        "hidden": true
+    },
+    {
+        "name": "phase",
+        "title": "Engineer search type.",
+        "type": "string",
+        "value": "ALL",
+        "hidden": true
     }]
 }

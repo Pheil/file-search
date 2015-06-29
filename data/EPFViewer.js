@@ -1,56 +1,10 @@
 // Setup for display of EPF
- function epfsetup()
- {
-   //document.getElementById("PN_saved").setAttribute("hidden", "false");
-   var prefManager = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
-   var PN_saved = prefManager.getCharPref("extensions.partnumbersearch.Part_Number");
+var PN_saved = preferences.Part_Number;
    document.getElementById("PN_saved").setAttribute("value", PN_saved);
    document.title = PN_saved + ' EPF';
-   
-   //Prefix the full url on anchor links so they don't come up as resource urls (does not work, need to spoof)
-   //var anchor = document.createElement('a');
-   //anchor.href = 'file:///S:/' + PN_saved;
-   //window.content.location.href = 'file:///S:/' + PN_saved;
-  
-   //    var PN_saved = document.getElementById("PN_saved").getAttribute("value");
-   //document.getElementById("blank").setAttribute("hidden", "false");
-   //document.getElementById("search").setAttribute("hidden", "true");
-   //document.getElementById("partnumber").setAttribute("hidden", "true");
-   //document.getElementById("but_reset").setAttribute("hidden", "false");
-   //document.getElementById("but_launch").setAttribute("hidden", "false");
 
-// Build
-   //document.getElementById("Tree_b").setAttribute("hidden", "false");
-   //document.getElementById("List_b").setAttribute("hidden", "false");
-   //document.getElementById("Tree_b_v").setAttribute("hidden", "false");
-   
-// Correspondence & Presentations
-   //document.getElementById("Tree_cp").setAttribute("hidden", "false");
-   //document.getElementById("List_cp").setAttribute("hidden", "false");
-   //document.getElementById("Tree_cp_v").setAttribute("hidden", "false");
-   
-// Costs
-   //document.getElementById("Tree_c").setAttribute("hidden", "false");
-   //document.getElementById("List_c").setAttribute("hidden", "false");
-   //document.getElementById("Tree_c_v").setAttribute("hidden", "false");
-   
-// Design & Engineering
-   //document.getElementById("Tree_de").setAttribute("hidden", "false");
-   //document.getElementById("List_de").setAttribute("hidden", "false");
-   //document.getElementById("Tree_de_v").setAttribute("hidden", "false");
-   
-// Dimension Checks
-   //document.getElementById("Tree_dc").setAttribute("hidden", "false");
-   //document.getElementById("List_dc").setAttribute("hidden", "false");
-   //document.getElementById("Tree_dc_v").setAttribute("hidden", "false");
-   
-// Prints & CAD
-   //document.getElementById("Tree_pc_v").setAttribute("hidden", "false");
-   //document.getElementById("List_pc").setAttribute("hidden", "false");
-   //document.getElementById("Tree_pc").setAttribute("hidden", "false");
-
-var file = Components.classes["@mozilla.org/file/local;1"].  
-              createInstance(Components.interfaces.nsIFile);
+var file = Cc["@mozilla.org/file/local;1"].  
+              createInstance(Ci.nsIFile);
 
 //Check for main dir note file
     file.initWithPath('S:\\' + PN_saved);
@@ -60,7 +14,7 @@ var file = Components.classes["@mozilla.org/file/local;1"].
     var epf_note = [];
     while (children.hasMoreElements())
         {
-            child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+            child = children.getNext().QueryInterface(Ci.nsIFile);
             if (child.isFile() === true)
                 {
                     counter = counter + 1;
@@ -121,7 +75,7 @@ var pc_list5;
             b_list1 = [];
             while (children.hasMoreElements())
                 {
-                child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+                child = children.getNext().QueryInterface(Ci.nsIFile);
                 b_list1.push(child.leafName);
                 }
         }
@@ -133,7 +87,7 @@ var pc_list5;
             b_list2 = [];
             while (children.hasMoreElements())
                 {
-                    child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+                    child = children.getNext().QueryInterface(Ci.nsIFile);
                     b_list2.push(child.leafName);
                 }
         }
@@ -145,7 +99,7 @@ var pc_list5;
             b_list3 = [];
             while (children.hasMoreElements())
                 {
-                    child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+                    child = children.getNext().QueryInterface(Ci.nsIFile);
                     b_list3.push(child.leafName);
                 }
         }
@@ -157,7 +111,7 @@ var pc_list5;
             b_list4 = [];
             while (children.hasMoreElements())
                 {
-                child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+                child = children.getNext().QueryInterface(Ci.nsIFile);
                 b_list4.push(child.leafName);
                 }
         }
@@ -169,7 +123,7 @@ var pc_list5;
     children = file.directoryEntries;
     cp_list1 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       cp_list1.push(child.leafName);
     }
      }
@@ -179,7 +133,7 @@ var pc_list5;
     children = file.directoryEntries;
     cp_list2 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       cp_list2.push(child.leafName);
     }
      }
@@ -191,7 +145,7 @@ var pc_list5;
     children = file.directoryEntries;
     c_list1 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       c_list1.push(child.leafName);
     }
      }
@@ -201,7 +155,7 @@ var pc_list5;
     children = file.directoryEntries;
     c_list2 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       c_list2.push(child.leafName);
     }
      }
@@ -213,7 +167,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list1 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list1.push(child.leafName);
     }
      }
@@ -223,7 +177,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list2 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list2.push(child.leafName);
     }
      }
@@ -233,7 +187,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list3 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list3.push(child.leafName);
     }
      }
@@ -243,7 +197,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list4 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list4.push(child.leafName);
     }
      }
@@ -253,7 +207,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list5 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list5.push(child.leafName);
     }
      }
@@ -263,7 +217,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list6 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list6.push(child.leafName);
     }
      }
@@ -273,7 +227,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list7 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list7.push(child.leafName);
     }
      }
@@ -283,7 +237,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list8 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list8.push(child.leafName);
     }
      }
@@ -293,7 +247,7 @@ var pc_list5;
     children = file.directoryEntries;
     de_list9 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       de_list9.push(child.leafName);
     }
      }
@@ -305,7 +259,7 @@ var pc_list5;
     children = file.directoryEntries;
     dc_list1 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       dc_list1.push(child.leafName);
     }
      }
@@ -315,7 +269,7 @@ var pc_list5;
     children = file.directoryEntries;
     dc_list2 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       dc_list2.push(child.leafName);
     }
      }
@@ -325,7 +279,7 @@ var pc_list5;
     children = file.directoryEntries;
     dc_list3 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       dc_list3.push(child.leafName);
     }
      }
@@ -335,7 +289,7 @@ var pc_list5;
     children = file.directoryEntries;
     dc_list4 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       dc_list4.push(child.leafName);
     }
      }
@@ -347,7 +301,7 @@ var pc_list5;
     children = file.directoryEntries;
     pc_list1 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       pc_list1.push(child.leafName);
     }
      }
@@ -357,7 +311,7 @@ var pc_list5;
     children = file.directoryEntries;
     pc_list2 = [];
     while (children.hasMoreElements()) {
-      child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+      child = children.getNext().QueryInterface(Ci.nsIFile);
       pc_list2.push(child.leafName);
     }
      }
@@ -369,7 +323,7 @@ var pc_list5;
             pc_list3 = [];
             while (children.hasMoreElements())
                 {
-                    child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+                    child = children.getNext().QueryInterface(Ci.nsIFile);
                     pc_list3.push(child.leafName);
                 }
         }
@@ -381,7 +335,7 @@ var pc_list5;
         pc_list4 = [];
         while (children.hasMoreElements())
         {
-            child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+            child = children.getNext().QueryInterface(Ci.nsIFile);
             pc_list4.push(child.leafName);
         }
     }
@@ -393,7 +347,7 @@ var pc_list5;
             pc_list5 = [];
             while (children.hasMoreElements())
             {
-                child = children.getNext().QueryInterface(Components.interfaces.nsIFile);
+                child = children.getNext().QueryInterface(Ci.nsIFile);
                 pc_list5.push(child.leafName);
             }
         }
@@ -495,7 +449,7 @@ else if(undefined !== nofolder)
             for(l=pc_list4.length-1; l>=0; l--) {list_pc.insertItemAt(k,pc_list4[l],"Internal");}
             for(m=pc_list5.length-1; m>=0; m--) {list_pc.insertItemAt(l,pc_list5[m],"Supplier");}
        }
- }
+
  
 function setText(listID,dirFolder)
     {
@@ -516,15 +470,6 @@ function setText(listID,dirFolder)
             }
     }
 
-function cs(save,delete1,delete2,delete3,delete4,delete5)
-    {
-        //document.getElementById(delete1).clearSelection();
-        //document.getElementById(delete2).clearSelection();
-        //document.getElementById(delete3).clearSelection();
-        //document.getElementById(delete4).clearSelection();
-        //document.getElementById(delete5).clearSelection();
-    }
-
 function setPrev(thetab)
     {
         document.getElementById("addy").setAttribute("value", "");
@@ -532,13 +477,12 @@ function setPrev(thetab)
 
 function openFile()
     {
-        //netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
         var file = document.getElementById("addy").getAttribute("value");
         if (file === "")
             {
                 var stringBundle = document.getElementById("EPF-string-bundle");
-                var classObj = Components.classes["@mozilla.org/alerts-service;1"];
-                var alertService = classObj.getService(Components.interfaces.nsIAlertsService);
+                var classObj = Cc["@mozilla.org/alerts-service;1"];
+                var alertService = classObj.getService(Ci.nsIAlertsService);
                 alertService.showAlertNotification('chrome://partnumbersearch/skin/Tenneco_fs.png', stringBundle.getString("EPF_error"), stringBundle.getString("EPF_error2"));
             }
         else
@@ -563,12 +507,11 @@ function openFile()
 
 function openFilel()
     {
-        //netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
         var fldrname = document.getElementById("fldrname").getAttribute("value");
         if (!fldrname){
             var stringBundle = document.getElementById("EPF-string-bundle");
-            var classObj = Components.classes["@mozilla.org/alerts-service;1"];
-            var alertService = classObj.getService(Components.interfaces.nsIAlertsService);
+            var classObj = Cc["@mozilla.org/alerts-service;1"];
+            var alertService = classObj.getService(Ci.nsIAlertsService);
             alertService.showAlertNotification('chrome://partnumbersearch/skin/Tenneco_fs.png', stringBundle.getString("EPF_error"), stringBundle.getString("EPF_error2"));}
         else
             {
@@ -593,11 +536,11 @@ function copyFilel()
     var file = document.getElementById("addy").getAttribute("value");
     if (!file){
         var stringBundle = document.getElementById("EPF-string-bundle");
-        var classObj = Components.classes["@mozilla.org/alerts-service;1"];
-        var alertService = classObj.getService(Components.interfaces.nsIAlertsService);
+        var classObj = Cc["@mozilla.org/alerts-service;1"];
+        var alertService = classObj.getService(Ci.nsIAlertsService);
         alertService.showAlertNotification('chrome://partnumbersearch/skin/Tenneco_fs.png', stringBundle.getString("EPF_error"), stringBundle.getString("EPF_error2"));}
     else {
-        const gClipboardHelper = Components.classes["@mozilla.org/widget/clipboardhelper;1"].getService(Components.interfaces.nsIClipboardHelper);
+        const gClipboardHelper = Cc["@mozilla.org/widget/clipboardhelper;1"].getService(Ci.nsIClipboardHelper);
         gClipboardHelper.copyString(file);
     }
 
@@ -608,34 +551,33 @@ function copyFilen()
     var filename = document.getElementById("fname").getAttribute("value");
         if (!filename){
             var stringBundle = document.getElementById("EPF-string-bundle");
-            var classObj = Components.classes["@mozilla.org/alerts-service;1"];
-            var alertService = classObj.getService(Components.interfaces.nsIAlertsService);
+            var classObj = Cc["@mozilla.org/alerts-service;1"];
+            var alertService = classObj.getService(Ci.nsIAlertsService);
             alertService.showAlertNotification('chrome://partnumbersearch/skin/Tenneco_fs.png', stringBundle.getString("EPF_error"), stringBundle.getString("EPF_error2"));}
         else {
-            const gClipboardHelper = Components.classes["@mozilla.org/widget/clipboardhelper;1"].getService(Components.interfaces.nsIClipboardHelper);
+            const gClipboardHelper = Cc["@mozilla.org/widget/clipboardhelper;1"].getService(Ci.nsIClipboardHelper);
             gClipboardHelper.copyString(filename);
     }
 }
 
 function db_getLocalFileFromNativePathOrUrl(aPathOrUrl) {
-//netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
   if (aPathOrUrl.substring(0,7) == "file://") {
 
     // if this is a URL, get the file from that
-    var ioSvc = Components.classes["@mozilla.org/network/io-service;1"]
-      .getService(Components.interfaces.nsIIOService);
+    var ioSvc = Cc["@mozilla.org/network/io-service;1"]
+      .getService(Ci.nsIIOService);
 
     // XXX it's possible that using a null char-set here is bad
     const fileUrl = ioSvc.newURI(aPathOrUrl, null, null).
-      QueryInterface(Components.interfaces.nsIFileURL);
+      QueryInterface(Ci.nsIFileURL);
     return fileUrl.file.clone().
-      QueryInterface(Components.interfaces.nsIFile);
+      QueryInterface(Ci.nsIFile);
 
   } else {
 
     // if it's a pathname, create the nsIFile directly
-    var f = Components.classes["@mozilla.org/file/local;1"].
-      createInstance(Components.interfaces.nsIFile);
+    var f = Cc["@mozilla.org/file/local;1"].
+      createInstance(Ci.nsIFile);
     f.initWithPath(aPathOrUrl);
 
     return f;
@@ -665,7 +607,6 @@ var togglelist = function(list) {
  {
     document.getElementById("PN_saved").setAttribute("hidden", "true");
     document.getElementById("PN_saved").setAttribute("value", "");
-    //document.getElementById("blank").setAttribute("hidden", "true");
     document.getElementById("search").setAttribute("hidden", "false");
     document.getElementById("partnumber").setAttribute("hidden", "false");
     document.getElementById("partnumber").setAttribute("value", "");
