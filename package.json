@@ -22,6 +22,18 @@
         "hidden": true
     },
     {
+        "name": "TabFocus",
+        "title": "When opening a tab switch to it immediately",
+        "type": "bool",
+        "value": true
+    },
+    {
+        "name": "PanelClose",
+        "title": "Auto close search panel after search",
+        "type": "bool",
+        "value": true
+    },
+    {
         "name": "Part_Number_a",
         "title": "Dual View file A",
         "type": "string",

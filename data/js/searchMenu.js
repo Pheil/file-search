@@ -1,3 +1,8 @@
+self.port.on("show", function onShow() {
+    $('#searchx').focus();
+    $('#searchx').select();
+});
+
 //twitter typeahead - works basic
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
@@ -36,13 +41,21 @@ var substringMatcher = function(strs) {
             },
             {
               name: 'theArray',
-              limit: 16,
-              source: substringMatcher(data)
+              limit: 500,
+              source: substringMatcher(data),
+              templates: {
+                //header: '<h3 class="league-name">TEST</h3>',
+                empty: [
+                  '<div class="empty-message">',
+                    'Unable to find matches with current query',
+                  '</div>'
+                ].join('\n')
+              }
             });
     });
   }); 
   
-//twitter typeahead - multiple sources
+//twitter typeahead - multiple sources - not working
 /* var nbaTeams = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Part'),
   queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -81,8 +94,6 @@ var data_B;
             });
     }); */
     
-
-
 //3
 /*     self.port.emit("data_load_A");
     self.port.once("rtn_data_A",
@@ -102,94 +113,23 @@ var data_B;
               source: data_Ax
             });
     });  */
+    
 
 
- 
-function FSEnter(e) {
-    if (e == 13) // If user hits 'enter' then run the FSdisplay function
-    {
-        FSdisplay();
+$('#searchx').keypress(function(e){
+    if(e.which == 13){//Enter key pressed
+        $('#search-button').click();//Trigger search button click event
     }
-    return true;
-} 
+});
 
-
-// function ArrCheck() {
-// var superarraypref = this.prefManager.getBoolPref("Super_array");
-// var AdvSelection = this.prefManager.getCharPref("Part_Num_type"); // This gets the drop down item selected.
-// var arraypref = this.prefManager.getBoolPref("Part_array"); // Auto updated part list
-// var thepartarray;
-// if (arraypref === true) {
-// if (superarraypref === true) {
-// thepartarray = "superarray"; // Save variable for auto set back to part mode code
-// if (AdvSelection == "P") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'superarray');
-// }
-// } else if (superarraypref === false) {
-// thepartarray = "customarray2";
-// if (AdvSelection == "P") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'customarray2');
-// }
-// }
-// } else if (arraypref === false) { // Static Array
-// thepartarray = "customarray2b";
-// if (AdvSelection == "P") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'customarray2b');
-// }
-// }
-
-// if (AdvSelection != "P" && superarraypref === false) {
-// if (AdvSelection == "R") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'PSarray');
-// } else if (AdvSelection == "S") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'TSarray');
-// } else if (AdvSelection == "D") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'RFParray');
-// } else if (AdvSelection == "M") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'MSarray');
-// } else if (AdvSelection == "K") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'sketcharray');
-// } else if (AdvSelection == "T") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'Tarray');
-// } else if (AdvSelection == "C") {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', 'costarray');
-// }
-// } else if (AdvSelection != "P" && superarraypref === true) {
-// document.getElementById("search-terms2").setAttribute('autocompletesearchparam', "superarray");
-// thepartarray = "superarray";
-// }
-// return thepartarray;
-// }
-
-function Transferable(source) {
-    const nsTransferable = Components.Constructor("@mozilla.org/widget/transferable;1", "nsITransferable");
-    var res = nsTransferable();
-    if ('init' in res) {
-        // When passed a Window object, find a suitable privacy context for it.
-        if (source instanceof Ci.nsIDOMWindow)
-        // Note: in Gecko versions >16, you can import the PrivateBrowsingUtils.jsm module
-        // and use PrivateBrowsingUtils.privacyContextFromWindow(sourceWindow) instead
-            source = source.QueryInterface(Ci.nsIInterfaceRequestor)
-            .getInterface(Ci.nsIWebNavigation);
-        res.init(source);
-    }
-    return res;
-}
-
-function FSdisplay() {
+$('#search-button').click(function(){
     //window.parent.postMessage("E1", "*");
-    //var thepartarray = ArrCheck();
-    //var stringBundle = document.getElementById("filesearchtoolbar-string-bundle");
     var terms = window.document.getElementById("searchx").value;
 
-    if (terms === "" || terms === undefined) //Search without a search term
+    if (terms === "" || terms === void(0) || terms === null) //Search without a search term
     {
         //Empty search error
-        window.parent.postMessage({
-            "type": "error",
-            "title": "fs_error",
-            "msg": "fs_emptysearch"
-        }, "*");
+        self.port.emit("empty");
         return;
     }
 
@@ -204,33 +144,15 @@ function FSdisplay() {
         var termcode2 = String(termsUP).substring(0, 2); // Extract first 2 digits of search term
         var termcode2b = String(termsUP).substring(2, 4); // Extract third and fourth digits of search term 
         var termcode3 = String(termsUP).substring(0, 3); // Extract first 3 digits of search term
+        var termcode4 = String(termsUP).substring(4, 5); // Extract the character that would indicate if it is a B series number
+        var termcode4b = String(termsUP).substring(0, 4); // Extract first 4 digits of search term
         var termcode6 = String(termsUP).substring(5, 6); // Extract the sixth character for use when full 11 digit code A series is entered
         var termcode7 = String(termsUP).substring(5, 11); // Extract non GT part of inputed number when accidental entry for A series
-        var termcode4 = String(termsUP).substring(4, 5); // Extract the character that would indicate if it is a B series number
+
         var folder = "UNKNOWN"; // Sets initial folder value, for error checking
-
-        // Determines if the user is in non-part mode, but should be and switches back
-        //var label;
-
-        //if (AdvSelection != "P" && AdvSelection != "F") {
-        //    if (termcode2 != "PS" || termcode2 != "TX" || termcode2 != "TS" || termcode2 != "MR" || termcode3 != "RFP" || termcode2 != "MS" || termcode2 != "SK" || termcode2 != "MT" || termcode2 != "PT" || termcode2 != "M-" || termcode3 != "EWS") {
-        //        label = 'fs_parts';
-        //        aselect = 'fs_parts2';
-        //        AdvSelection = stringBundle.getString(aselect); // Needed so folder doesn't get incorrectly defined
-        //    }
-        //}
-        //if (AdvSelection == "EPF")
-        //{
-        //console.log("EPF Requested");
-        //label = 'fs_epf';
-        //    aselect = 'F';
-        //    AdvSelection = aselect; // Needed so folder doesn't get incorrectly defined
-        //}
-        //var AdvSelection = 'Part';
         var aselect = 'P';
 
         // Determines if user is not searching for a part and changes the mode to the correct type
-
         if (termcode2 == "PS") {
             label = 'fs_ps';
             aselect = 'R';
@@ -301,10 +223,15 @@ function FSdisplay() {
             label = 'fs_ts';
             aselect = 'S';
         }
-        //AdvSelection = aselect; // Needed so folder doesn't get incorrectly defined
 
         // Start Part Code
-        if (termcount == 6) {
+        if (termcount == 5) {
+           if (termcode == 0) {
+                folder = "CLEVPRNT/000/";
+            } else if (termcode == 1) {
+                folder = "CLEVPRNT/100/";
+            } 
+        } else if (termcount == 6) {
             if (termcode == 0) {
                 folder = "CLEVPRNT/000/";
             } else if (termcode == 1) {
@@ -327,8 +254,7 @@ function FSdisplay() {
                 folder = "CLEVPRNT/900/";
             } else if (termcode2 == "X0") {
                 folder = "CLEVPRNT/000/";
-            } // X A Series Drawings
-            else if (termcode2 == "X1") {
+            } else if (termcode2 == "X1") {// X A Series Drawings
                 folder = "CLEVPRNT/100/";
             } else if (termcode2 == "X2") {
                 folder = "CLEVPRNT/200/";
@@ -345,22 +271,40 @@ function FSdisplay() {
             } else if (termcode2 == "X9") {
                 folder = "CLEVPRNT/900/";
             }
+        } else if (termcount == 7) {
+            if (termcode3 == "AP1") {// AP A Series Drawings
+                folder = "CLEVPRNT/100/";
+            } else if (termcode3 == "AP2") {
+                folder = "CLEVPRNT/200/";
+            } else if (termcode3 == "AP5") {
+                folder = "CLEVPRNT/500/";
+            } else if (termcode3 == "AP7") {
+                folder = "CLEVPRNT/700/";
+            }
         } else if (termcount == 8) {
-            if (termcode3 == "AM2") {
+            if (termcode3 == "AM2") {// AM A Series Drawings
                 folder = "CLEVPRNT/200/";
             } else if (termcode3 == "AM4") {
                 folder = "CLEVPRNT/400/";
-            } // AM A Series Drawings
-            else if (termcode3 == "AM6") {
+            } else if (termcode3 == "AM6") {
                 folder = "CLEVPRNT/600/";
             } else if (termcode3 == "AM8") {
                 folder = "CLEVPRNT/800/";
+            } else if (termcode3 == "AP2") {// AP A Series Drawings
+                folder = "CLEVPRNT/200/";
+            } else if (termcode3 == "AP6") {
+                folder = "CLEVPRNT/600/";
+            } else if (termcode3 == "AP7") {
+                folder = "CLEVPRNT/700/";
+            } else if (termcode3 == "AP8") {
+                folder = "CLEVPRNT/800/";
+            } else if (termcode4b == "APX1") {// APX A Series Drawings
+                folder = "CLEVPRNT/100/";
             } else if (termcode3 == "AM9") {
                 folder = "CLEVPRNT/900/";
             } else if (termcode3 == "SD0") {
                 folder = "CLEVPRNT/000/";
-            } // SD A Series Drawings
-            else if (termcode3 == "SD1") {
+            } else if (termcode3 == "SD1") {// SD A Series Drawings
                 folder = "CLEVPRNT/100/";
             } else if (termcode3 == "SD2") {
                 folder = "CLEVPRNT/200/";
@@ -380,8 +324,7 @@ function FSdisplay() {
                 folder = "CLEVPRNT/900/";
             } else if (termcode3 == "SA0") {
                 folder = "CLEVPRNT/000/";
-            } // SA A Series Drawings
-            else if (termcode3 == "SA1") {
+            } else if (termcode3 == "SA1") {// SA A Series Drawings
                 folder = "CLEVPRNT/100/";
             } else if (termcode3 == "SA2") {
                 folder = "CLEVPRNT/200/";
@@ -401,8 +344,7 @@ function FSdisplay() {
                 folder = "CLEVPRNT/900/";
             } else if (termcode3 == "AP1") {
                 folder = "CLEVPRNT/100/";
-            } // AP A Series Drawings
-            else if (termcode3 == "AP2") {
+            } else if (termcode3 == "AP2") {// AP A Series Drawings
                 folder = "CLEVPRNT/200/";
             } else if (termcode3 == "AP5") {
                 folder = "CLEVPRNT/500/";
@@ -416,17 +358,19 @@ function FSdisplay() {
                 folder = "CLEVPRNT/900/";
             } else if (termcode3 == "BA2") {
                 folder = "CLEVPRNT/200/";
-            } // BA A Series Drawings
-            else if (termcode3 == "BA5") {
+            } else if (termcode4b == "BA-2") {// BA- A Series Drawings
+                folder = "CLEVPRNT/200/";
+            } else if (termcode3 == "BA5") {// BA A Series Drawings
                 folder = "CLEVPRNT/500/";
+            } else if (termcode3 == "BA6") {
+                folder = "CLEVPRNT/600/";
             } else if (termcode3 == "BA8") {
                 folder = "CLEVPRNT/800/";
             } else if (termcode3 == "BA9") {
                 folder = "CLEVPRNT/900/";
             } else if (termcode3 == "CB0") {
                 folder = "CLEVPRNT/000/";
-            } // CB A Series Drawings
-            else if (termcode3 == "CB4") {
+            } else if (termcode3 == "CB4") {// CB A Series Drawings
                 folder = "CLEVPRNT/400/";
             } else if (termcode3 == "CB6") {
                 folder = "CLEVPRNT/600/";
@@ -436,8 +380,7 @@ function FSdisplay() {
                 folder = "CLEVPRNT/900/";
             } else if (termcode3 == "SX1") {
                 folder = "CLEVPRNT/100/";
-            } // SX A Series Drawings
-            else if (termcode3 == "SX5") {
+            } else if (termcode3 == "SX5") {// SX A Series Drawings
                 folder = "CLEVPRNT/500/";
             } else if (termcode3 == "SX7") {
                 folder = "CLEVPRNT/700/";
@@ -447,8 +390,7 @@ function FSdisplay() {
                 folder = "CLEVPRNT/900/";
             } else if (termcode3 == "IM0") {
                 folder = "CLEVPRNT/000/";
-            } // IM A Series Drawings
-            else if (termcode3 == "IM6") {
+            } else if (termcode3 == "IM6") {// IM A Series Drawings
                 folder = "CLEVPRNT/600/";
             } else if (termcode3 == "IM8") {
                 folder = "CLEVPRNT/800/";
@@ -523,11 +465,12 @@ function FSdisplay() {
                 } // Special exemption for material query - RM01A532460
                 else {
                     // Query is for A Series
-                    window.parent.postMessage({
-                        "type": "error",
-                        "title": "fs_error",
-                        "msg": "fs_seriesGT_code"
-                    }, "*");
+                    self.port.emit("aGTC");
+                    // window.parent.postMessage({
+                        // "type": "error",
+                        // "title": "fs_error",
+                        // "msg": "fs_seriesGT_code"
+                    // }, "*");
                     if (termcode6 == 0) {
                         folder = "CLEVPRNT/000/";
                         termsUP = termcode7;
@@ -622,7 +565,6 @@ function FSdisplay() {
                 }
             }
         }
-
         // End Part Code
 
         if (aselect == "T") {
@@ -650,49 +592,28 @@ function FSdisplay() {
             folder = "MATSPEC/";
         }
 
-        //document.getElementById('AdvancedMenu').setAttribute('tooltiptext', stringBundle.getString(tooltip));
-        //document.getElementById('AdvancedMenu').setAttribute('style', 'list-style-image: url(chrome://partnumbersearch/skin/masterICO.png);-moz-image-region: rect(0px, ' + iconloca + 'px, 16px, ' + iconlocb + 'px);min-width: 2em; max-width: 10em;');
-        //document.getElementById('search-terms2').setAttribute('autocompletesearchparam', thearray);
-        //AdvSelection = aselect;
-        //if (AdvSelection == "F") //EPF
-        //{
-        //    folder = "EPF";
-        //}
-
         if (folder == "UNKNOWN") { // Unknown search term error
-            window.parent.postMessage({
-                "type": "error",
-                "title": "fs_error",
-                "msg": "fs_unknown_code_a"
-            }, "*");
+            console.log("File Search: Unknown folder");
+            self.port.emit("unknown", termsUP);
             return;
         }
         url_to_open = url_to_open + folder; //2.  Adds folder location of file
-        // terms = terms.replace(/ /g, "+");                                //3.  Optional to replace some text
         url_to_open = url_to_open + termsUP; //4.  Add the PN query to the url
         var url_to_open2 = url_to_open + ".pdf"; //5.  Add the file extension to the url
-        
+
         //Send request to main process
-        window.parent.postMessage({
-            "type": "open",
-            "title": folder,
-            "msg": url_to_open2,
-            "termsUP": termsUP
-        }, "*");
+        var array = new Array(folder, url_to_open2, termsUP);
+        self.port.emit("go_search", array);
     }
 
     function DVdisplay() {
-        // dual view requested
+        // dual view
         var darray = termsUP.split('!');
         var a = darray[0],
             b = darray[1];
         console.log("Dual View: Requesting '" + a + "' & '" + b + "'");
-        window.parent.postMessage({
-            "type": "open_dv",
-            "title": a,
-            "msg": b
-        }, "*");
-
+        var array = new Array(a, b);
+        self.port.emit("go_DV_search", array);
         return;
     }
-}
+}); 

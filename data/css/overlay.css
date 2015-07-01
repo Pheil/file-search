@@ -7,9 +7,7 @@
   font-size: 14px;
   line-height: 30px;
   border: 2px solid #ccc;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
+  border-radius: 4px;
   outline: none;
 }
 
@@ -17,14 +15,17 @@
   background-color: #fff;
 }
 
+.empty-message {
+  padding: 3px 5px;
+  color: #000;
+}
+
 .typeahead:focus {
   border: 2px solid #0097cf;
 }
 
 .tt-query {
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 .tt-hint {
@@ -32,18 +33,16 @@
 }
 
 .tt-menu {
+  max-height: 200px;
+  overflow-y: auto;
   width: 250px;
   margin: 12px 0;
   padding: 8px 0;
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  -webkit-border-radius: 8px;
-     -moz-border-radius: 8px;
-          border-radius: 8px;
-  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
 }
 
 .tt-suggestion {
@@ -61,7 +60,6 @@
 .tt-suggestion.tt-cursor {
   color: #fff;
   background-color: #0097cf;
-
 }
 
 .tt-suggestion p {
@@ -71,257 +69,17 @@
 .gist {
   font-size: 14px;
 }
-
-#addons-button 
-{	list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/addons.ico");}
-#FS-button
-{   list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/icon.png");}
-toolbar[iconsize="small"] #FS-button {    
-     list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/masterICO.png");
-	-moz-image-region: rect(0px, 176px, 16px, 160px);}
-
-#fs_logo {
-	height:19px;
-    width:78px;
-	-moz-appearance: none;
-	background:url("resource://FileSearch-at-tenneco-dot-com/data/images/Tenneco16.png");
-	padding: 0px;
-	margin: 0px;
-	border-bottom: 0px;
-	border-top: 0px;
-	border-right: 0px;
-	border-left: 0px;
-    background-repeat: no-repeat;
-}
-#fs_logo:hover:not([cui-areatype="menu-panel"]), #fs_logo:focus:not([cui-areatype="menu-panel"])
+#search-button
 {
-	height:19px;
-	-moz-appearance: none;
-	background: url("resource://FileSearch-at-tenneco-dot-com/data/images/Tenneco16b.png");
-	padding: 0px;
-	margin: 0px;
-	border-bottom: 0px;
-	border-top: 0px;
-	border-right: 0px;
-	border-left: 0px;
-    background-repeat: no-repeat;
-}
-#fs_logo[cui-areatype="menu-panel"],
-toolbarpaletteitem[place="palette"] > #fs_logo {
-    background: url("resource://FileSearch-at-tenneco-dot-com/data/images/Tenneco32.png");
-}
-#RCmenu, #AdvancedMenulist, #AdvancedMenu2list
-{
-	-moz-appearance: none !important;
-    padding: 0px;
-    background-clip: padding-box;
-    border-radius: 0px 0px 2.5px 2.5px;
-    border-bottom: 1px solid ThreeDShadow;
-	border-top: 1px solid ThreeDShadow;
-	border-right: 0px;
-	border-left: 1px solid ThreeDShadow;
-    color: black;
-    width:16px;
-	height: 21px;
-}
-#downloadstatus
-{
-    height: 16px;
-	width: 16px;
-}
-#email-button {
-    list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/email.png");
-    padding: 0px;
-}
-#email-button[cui-areatype="menu-panel"],
-toolbarpaletteitem[place="palette"] > #email-button {
-    list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/email32.png");
-    padding: 0px;
-}
-#DL-button {
-    list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/DL.png");
-    padding: 0px;
-}
-#DL-button[cui-areatype="menu-panel"],
-toolbarpaletteitem[place="palette"] > #DL-button {
-    list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/DL32.png");
-    padding: 0px;
-}
-#search-button, #search-button2
-{
-	-moz-appearance: none !important;
-    width:16px;
-    background-image: -moz-image-rect( url(resource://FileSearch-at-tenneco-dot-com/data/images/masterICO.png), 0,208,16,192 );
-	margin-right:0px;
-	margin-bottom:1px;
-	margin-left:-2px;
-    padding: 0;
-	background-repeat: no-repeat;
-    background-clip: padding-box;
-    border-radius: 0px 2.5px 2.5px 0px;
-    border-bottom: 1px solid ThreeDShadow;
-	border-top: 1px solid ThreeDShadow;
-	border-right: 1px solid ThreeDShadow;
-	border-left: 0px;
-	text-shadow: 0 0 3px white;
+	width:28px;
+    position:absolute;
+    margin-left: 14px;
+    height:28px;
+    background: url("resource://FileSearch-at-tenneco-dot-com/data/images/search.png") 0px 0px no-repeat;
+    float:right;
+    border: none;
 	cursor: pointer;
-	height: 21px;
-	-moz-box-align: center;
-
 }
-#AdvancedMenu
-{
-    list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/masterICO.png");
-	-moz-image-region: rect(0px, 176px, 16px, 160px);
-    -moz-appearance: none !important;
-    padding: 0;
-	padding-left:3px;
-	-moz-padding-end: 2px;
-	background: rgba(255,255,255,1);
-    background-clip: padding-box;
-	margin-top:0px;
-	margin-right:5px;
-	margin-bottom:1px;
-	margin-left:0px;
-    border-radius: 2.5px 0px 0px 2.5px;
-    border-bottom: 1px solid ThreeDShadow;
-	border-top: 1px solid ThreeDShadow;
-	border-right: 0px;
-	border-left: 1px solid ThreeDShadow;
-    color: black;
-	min-width: 0;
-	max-width: 10em;
-	height: 21px;
-	-moz-box-align: center;
-}
-#search
-{
-    -moz-appearance: none !important;
-	margin-top:0px;
-	margin-right:-2px;
-	margin-bottom:0px;
-	margin-left:-7px;
-	padding: 0px;
-    padding-left:3px;
-	background-clip: padding-box;
-    background: rgba(255,255,255,1);
-    border-bottom: 1px solid ThreeDShadow;
-	border-top: 1px solid ThreeDShadow;
-	border-right: 0px;
-	border-left: 0px;
-	height: 19px;
-	border-right: 0px;
-	border-left: 0px;
-	cursor: text;
-    box-shadow: 0 0 0 1px rgba(255,255,255,.3) inset,
-                         0 0 0 2px rgba(255,255,255,.1) inset,
-                     0 1px 0 rgba(0,0,0,.15)
-}
-/* Controls size on toolbar*/
-toolbar[iconsize="small"] #search {
-	min-width:130px;
-}
-/* Controls size on customize dialog*/
-toolbarpaletteitem[place="palette"] #search {
-    max-width:40px;
-}
-#search-group-1
-{
-    opacity: .75;
-    font-family: inherit;
-    font-size: 13px;
-	-moz-box-align: center;
-}
-#search-group-1:-moz-lwtheme:hover:not(:focus):not([selected=true]) {
-	opacity: .90;
-}
-#search-group-1:-moz-lwtheme:focus {
-	opacity: .90;
-}
-/* Controls size on toolbar*/
-toolbar[iconsize="small"] #search-group-1 {
-	max-width:130px;
-}
-#search-group-2
-{
-    opacity: .75;
-    font-family: inherit;
-    font-size: 13px;
-	-moz-box-align: center;
-}
-#search-group-2:-moz-lwtheme:hover:not(:focus):not([selected=true]) {
-    opacity: .90;
-}
-#search-group-2:-moz-lwtheme:focus {
-	opacity: .90;
-}
-/* Controls size on toolbar*/
-toolbar[iconsize="small"] #search-group-2 {
-	max-width:130px;
-}
-#engsearch
-{
-    -moz-appearance: none !important;
-	margin-top:0px;
-	margin-right:0px;
-	margin-bottom:1px;
-	margin-left:-5px;
-	padding: 0px;
-	background-clip: padding-box;
-	border: 1px solid ThreeDShadow;
-	border-right: 0px;
-	border-left: 0px;
-	height: 21px;
-	cursor: text;
-}
-/* Controls size on customize dialog*/
-toolbarpaletteitem[place="palette"] #engsearch {
-    max-width:40px;
-}
-/* ::::: autocomplete longer than textbox ::::: */
-
-#engsearch panel[type="autocomplete"], 
-#engsearch panel[type="autocomplete-richlistbox"],
-#engsearch panel[type="autocomplete-history-popup"] {
-	min-width:275px !important;
-	-moz-appearance: none !important;
-	border-width: 1px;
-	padding: 0;
-	height: auto;
-	margin-left:-11px;
-}
-#engsearch panel[type="autocomplete-tree"] {
-	background: rgba(255,255,255,1) !important;
-	min-width:275px !important;
-	min-height: 180px;
-	height: auto;
-}
-#search-button:not([disabled="true"]):not(:active):hover, #search-button2:not([disabled="true"]):not(:active):hover {
-	list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/masterICO.png");
-	-moz-image-region: rect(0px, 224px, 16px, 208px);
-}
-#search-button:not([disabled="true"]):hover:active, #search-button2:not([disabled="true"]):hover:active {
-	list-style-image: url("resource://FileSearch-at-tenneco-dot-com/data/images/masterICO.png");
-	-moz-image-region: rect(0px, 240px, 16px, 224px);
-}
-#AdvancedMenu2
-{
-    -moz-appearance: none !important;
-    padding: 0;
-	padding-left:1px;
-	background: rgba(255,255,255,1);
-    background-clip: padding-box;
-	margin-right:5px;
-	margin-bottom:1px;
-	margin-left:0px;
-    border-radius: 2.5px 0px 0px 2.5px;
-    border-bottom: 1px solid ThreeDShadow;
-	border-top: 1px solid ThreeDShadow;
-	border-right: 0px;
-	border-left: 1px solid ThreeDShadow;
-    color: black;
-	text-shadow: 0 0 3px white;
-	min-width: 0em;
-	max-width: 10em;
-	height: 21px;
+#search-button:hover {
+   background: url("resource://FileSearch-at-tenneco-dot-com/data/images/search_h.png") 0px 0px no-repeat;
 }
