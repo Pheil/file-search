@@ -10,6 +10,7 @@ const panels = require("sdk/panel");
 var preferences = require("sdk/simple-prefs").prefs;
 var clipboard = require("sdk/clipboard");
 var Request = require("sdk/request").Request;
+const cm = require("sdk/context-menu");
 const {Cc,Ci,Cm,Cu,components} = require("chrome");
 const { ToggleButton } = require("sdk/ui/button/toggle");
 const utils = require('sdk/window/utils');
@@ -21,20 +22,82 @@ Cu.import("resource://gre/modules/Services.jsm", this);
 Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/Task.jsm");
 Cu.import("resource://gre/modules/Downloads.jsm");
+Cu.import("resource://gre/modules/Promise.jsm");
 
 var myIconURL = self.data.url("./images/icon.png");
 var fileURL = require("./data/lib/fileURL.js");
+//var fileLocal = require("./data/lib/fileLocal.js");
 var wl = require("./data/lib/whitelist.js");
 
 Cu.import("resource://gre/modules/RemotePageManager.jsm");
 let DualViewmanager = new RemotePages("about:dualview");
+let EPFViewmanager = new RemotePages("about:epfviewer");
 
 // Create a page mod for EPF page
 pageMod.PageMod({
     include: "about:epfviewer",
-    contentScriptWhen: 'end',
-    contentScriptFile: './EPFViewer.js'
-});
+    onAttach: function(worker) {
+        var epf_menuItem = cm.Item({
+            label: "Launch File",
+            context: [cm.SelectorContext("option"), cm.URLContext("about:epfviewer")],
+            image: self.data.url("./images/launch.png"),
+            contentScript: 'self.on("click", function (node) {' +
+                         '  var folder1 = node.parentNode.id;' +
+                         '  var folder2 = node.value;' +
+                         '  var file = node.textContent;' +
+                         '  var upChange = JSON.stringify({' +
+                         '  folder1: folder1,' +
+                         '  folder2: folder2,' +
+                         '  file: file' +
+                         '  });' +
+                         '  self.postMessage(upChange);' +
+                         '});',
+            onMessage: function (upChange) {
+                launch(upChange);
+            }
+        });
+        
+        // var epf_menuItem2 = cm.Item({
+            // label: "Launch File Location",
+            // context: [cm.SelectorContext("option"), cm.URLContext("about:epfviewer")],
+            // image: self.data.url("./images/launch2.png"),
+            // contentScript: 'self.on("click", function (node) {' +
+                         // '  var folder1 = node.parentNode.id;' +
+                         // '  var folder2 = node.value;' +
+                         // '  var file = node.textContent;' +
+                         // '  var upChange = JSON.stringify({' +
+                         // '  folder1: folder1,' +
+                         // '  folder2: folder2,' +
+                         // '  file: file' +
+                         // '  });' +
+                         // '  self.postMessage(upChange);' +
+                         // '});',
+            // onMessage: function (upChange) {
+                // launch2(upChange);
+            // }
+        // });
+        
+        worker.on('detach', function () {
+            epf_menuItem.destroy();
+            //epf_menuItem2.destroy();
+        });
+
+        function launch(upChange) {
+            var parsedupChange = JSON.parse(upChange);
+            var folder1 = parsedupChange.folder1;
+            var folder2 = parsedupChange.folder2;
+            var file = parsedupChange.file;
+            var PN = preferences.Part_Number;
+            console.log("Attempting to launch: S:\\" + PN + "\\" + folder1 + "\\" + folder2 + "\\" + file);
+            tabs.open({
+                url: "S:\\" + PN + "\\" + folder1 + "\\" + folder2 + "\\" + file,
+                isPinned: false,
+                inNewWindow: false,
+                inBackground: false
+            });
+        }
+    }
+  });
 
 // Page mod for test specs
 pageMod.PageMod({
@@ -140,8 +203,6 @@ pageMod.PageMod({
 var fs_button = ToggleButton({
   id: "fs-search",
   label: "File Search",
-  badge: "",
-  badgeColor: "#00AAAA",
   icon: {
     "16": "./images/search16.png",
     "32": "./images/search32.png",
@@ -155,14 +216,13 @@ var fs_button = ToggleButton({
 //    console.log(button);
 //}
 
-
-
 var fs_panel = panels.Panel({
     width: 275,
     height: 275,
     focus: true,
     contentURL: "./searchMenu.html",
     onHide: handleHide,
+    //onShow: handleShow,
     contentScriptWhen: 'end',
     contentScriptFile: ["./js/jquery-1.10.2.js",
                       "./js/typeahead.bundle.js",
@@ -195,11 +255,91 @@ fs_panel.port.on("empty", function () {
     });
 });
 
+fs_panel.port.on("EPF", function (search) {
+    var pnSearch = search;
+    var epfPN;
+    var pnCount = pnSearch.length;
+    var epfFile;
+    var TPTterm;
+    var promises = [];
+    if (pnCount == 6) { // If only six digits then guess GT code
+        var arr = new Array("BP00", "CA00", "CM00", "CM05", "CM97", "CM99", "CT00", "FB00", "FB01", "FS32", "FS35", "FS99", "FS28", "FT44", "FT57", "FT99", "KT00", "LA00", "LA01", "LA02", "LA03", "LA04", "LA05", "LA06", "LA07", "LA99", "MB00", "MB01", "MB02", "MB03", "MB04", "MB05", "MB07", "MB08", "MB09", "MB96", "MB99", "MD00", "MM00", "MM01", "MM02", "MM03", "MM04", "MM05", "MS00", "RT01", "RT02", "RT03", "RT04", "RT05", "RT06", "RT07", "RT08", "RT09", "RT10", "RT11", "RT12", "RT13", "RT14", "RT15", "RT99", "SB01", "SB02", "SB03", "SB04", "SB05", "SB06", "SB07", "SB08", "SB96", "SB97", "SB98", "SB99", "SG00", "SG01", "XM00", "XM01", "XM02");
+        //var arr = new Array("MB96", "XM01", "XM02");
+        if (String(pnSearch).substring(0, 2) != "SK") {            // SKs do not have GTC
+            for (var h = arr.length - 1; h >= 0; h--) {
+                var TPTgtterm = arr[h]; // Sets current array GT code
+                TPTterm = TPTgtterm + "A" + pnSearch; // Sets file to check
+                epfFile = "S://" + TPTterm;
+                //epfPN = epfFile;
+                promises.push(getPN(epfFile)); // push the Promises to our array
+            }
+        }
+    }
+        
+      Promise.all(promises).then(function(dataArr) {
+        dataArr.forEach(function(data) {
+            console.log(epfPN + " / " + data);
+            if (epfPN == data) {
+                //console.log(epfPN.substring(4, 15));
+                preferences.Part_Number = epfPN.substring(4, 15)
+                fs_panel.hide();
+                tabs.open({
+                    url: "about:epfviewer",
+                    isPinned: false,
+                    inNewWindow: false,
+                    inBackground: false
+                }); 
+            } else {
+                notifications.notify({
+                    title: "File Search Error",
+                    text: "No EPF exists for " + search + "!" ,
+                    iconURL: myIconURL
+                });
+            }
+        });
+      }).catch(function(err) {
+        console.log(err);
+      });
+    
+    function getPN(partnum) {
+        console.log(partnum);
+        epfPN = partnum;
+        return new Promise(function(resolve, reject) {
+            if (OS.File.exists(epfFile)) {
+                console.log(OS.File.exists(epfFile));
+                //epfPN = partnum;
+                resolve(partnum);
+            }
+        });
+    }
+});
+
+EPFViewmanager.addMessageListener("get_pn", function() {
+    // Send saved PN to content script when requested
+    var PN_saved = preferences.Part_Number;
+    EPFViewmanager.sendAsyncMessage("thePN", PN_saved);
+});
+
+EPFViewmanager.addMessageListener("dir_check", function(directory) {
+    var epfDir = directory.data[0];
+    var dir_int = directory.data[1];
+    var file = Cc["@mozilla.org/file/local;1"].  
+                  createInstance(Ci.nsIFile);
+    file.initWithPath(epfDir);
+    children = file.directoryEntries;
+    dirList = [];
+    while (children.hasMoreElements()) {
+        child = children.getNext().QueryInterface(Ci.nsIFile);
+        dirList.push(child.leafName);
+    }
+    EPFViewmanager.sendAsyncMessage("thefiles" + dir_int, dirList);
+});
+
+
 fs_panel.port.on("unknown", function (search) {
-    //console.log("Panel requested data");
     notifications.notify({
         title: "File Search Error",
-        text: "Cannot determine path for '" + search + "'" ,
+        text: "Cannot determine path for '" + search + "'." ,
         iconURL: myIconURL
     });
 });
@@ -218,8 +358,6 @@ fs_panel.port.on("go_search", function (array) {
     });
     fileRequest.get();
 });
-
-
 
 fs_panel.port.on("go_DV_search", function (array) {
     preferences.Part_Number_a = array[0];
@@ -246,15 +384,12 @@ fs_panel.port.on("text-entered", function (text) {
 });
 
 function handleChange(state) {
-  //cae_button.badge = state.badge + 1;
   if (state.checked) {
-    fs_button.badgeColor = "#00AAAA";
     fs_panel.show({
       position: fs_button
     });
   }
   else {
-    fs_button.badgeColor = "#AA00AA";
   }
 }
 
@@ -276,7 +411,6 @@ function readhttp(thename){
     });
     httpRequest.get();
 }
-
 
 var PasteGo = ActionButton({
     id: "PasteGo-button",
@@ -358,7 +492,9 @@ var email = ActionButton({
             // Sets dir to desktop.
             var pdf_dir = require('sdk/system').pathFor('Desk');
    
-            var email_pdf = pdf_dir + "\\" + open_PDF_name;
+            var d = new Date();
+            var df = "" + (d.getMonth() + 1) + d.getDate() + d.getFullYear();
+            var email_pdf = pdf_dir + "\\" + open_PDF_name2 + "_" + df + ".pdf";
             DownloadFile(email_pdf,data_URL.href);
 
             const myurl = "mailto://?subject=" + open_PDF_name2 + "%20Print&body=%0AAttached%20is%20the%20Tenneco%20" + open_PDF_name2 + "%20print.%0A%0A&attach=" + email_pdf + "";
@@ -451,157 +587,11 @@ function transferComplete(termsUP, url_to_open, url_to_open2) {
         }
 }
 
-// var AdvancedMenu = new Frame({
-  // id: "AdvancedMenu",
-  // url: "./AdvancedMenu.html",
-  // onMessage: (e) => {
-        // var type = e.data.type;
-        // var title = e.data.title;
-        // var msg = e.data.msg;
-        // var termsUP = e.data.termsUP;
-        // if (type == "error"){
-            // notifications.notify({
-                // title: _(title),
-                // text: _(msg),
-                // iconURL: myIconURL
-            // });
-        // } else if (type == "open") {
-            // console.log("URL: " + msg + ", Term: " + termsUP);
-            // var url_to_open3 = msg;
-            // // ****START EPF***************************************
-            // /*if (title == "EPF") { // Electronic part file selected so change URL format for S drive
-                // //First check for six digit for GTC guessing
-                // var termcount = termsUP.length;
-                // var GTC_Guess;
-                // if (termcount == 6) { // If only six digits then guess GT code enabled
-                    // GTC_Guess = true;
-                // }
-                // var target;
-                // if (GTC_Guess === true) { // Loop through GT Codes if GTC_Guess is enabled, this is only a partial listing
-                    // var arr = new Array("BP00", "CA00", "CM00", "CM05", "CM97", "CM99", "CT00", "FB00", "FB01", "FS32", "FS35", "FS99", "FS28", "FT44", "FT57", "FT99", "KT00", "LA00", "LA01", "LA02", "LA03", "LA04", "LA05", "LA06", "LA07", "LA99", "MB00", "MB01", "MB02", "MB03", "MB04", "MB05", "MB07", "MB08", "MB09", "MB96", "MB99", "MD00", "MM00", "MM01", "MM02", "MM03", "MM04", "MM05", "MS00", "RT01", "RT02", "RT03", "RT04", "RT05", "RT06", "RT07", "RT08", "RT09", "RT10", "RT11", "RT12", "RT13", "RT14", "RT15", "RT99", "SB01", "SB02", "SB03", "SB04", "SB05", "SB06", "SB07", "SB08", "SB96", "SB97", "SB98", "SB99", "SG00", "SG01", "XM00", "XM01", "XM02");
-                    // // ****START GTC Guessing***************************************
-                    // if (String(termsUP).substring(0, 2) == "SK") { // SK file so no GTC needed
-                        // termsUP = termsUP;
-                    // } else {
-                        // var TPTterm;
-                        // for (var h = arr.length - 1; h >= 0; h--)
-                        // {
-                            // var TPTgtterm = arr[h]; // Sets current array GT code
-                            // TPTterm = TPTgtterm + "A" + termsUP; // Sets file to search for
-                            // var target = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-                            // target.initWithPath("s:\\" + TPTterm);
-                            // if (target.exists()) {
-                                // h = 0;
-                            // } // Check that EPF folder exists
-                        // }
-                        // termsUP = TPTterm;
-                    // }
-                    // // ****END GTC Guessing*****************************************
-                // } // End GTC guessing if statement
-            
-            
-                // // Open advanced EPF view
-                // target = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-                // target.initWithPath("s:\\" + termsUP);
-                // if (!target.exists()) { // Check that EPF folder exists
-                    // // PF does not exist
-                    // console.log(terms + " does not exist!  Verify six vs eleven digit folder names");
-                    // //Indicator('true');
-                        // notifications.notify({
-                            // title: _(fs_error),
-                            // text: _(fs_epf_code),
-                            // iconURL: myIconURL
-                        // });
-                    // return;
-                // } else {
-                    // preferences.Part_Number = termsUP;
-                    // tabs.open({
-                        // url: "resource://FileSearch-at-tenneco-dot-com/data/EPFViewer.html",
-                        // isPinned: false,
-                        // inNewWindow: false,
-                        // inBackground: false
-                    // });
-                    // //gBrowser.selectedTab = gBrowser.addTab("./EPFViewer.html#" + "s:\\" + termsUP);
-                // }
-            // } */
-            // // ****END EPF***************************************
-            // //else // Not EPF so perform normal HTTP get
-            // //{
-                // var fileRequest = Request({
-                  // url: url_to_open3,
-                  // onComplete: function (response) {
-                    // transferComplete(termsUP, msg, url_to_open3);
-                  // }
-                // });
-                // fileRequest.get();
-            // //}
-        // } else if (type == "open_dv") {//Dual view
-            // //console.log("File A: " + title + ", File B: " + msg);
-            
-            // tabs.open({
-                // url: "about:dualview",
-                // isPinned: false,
-                // inNewWindow: false,
-                // inBackground: false
-            // });
-            
-            // DualViewmanager.addMessageListener("ready", function() {
-                // var array = new Array(title, msg);
-                // DualViewmanager.sendAsyncMessage("search", array);
-            // });
-            // //var array = new Array(title, msg);
-            // //DualViewmanager.sendAsyncMessage("search", array);
-            
-        // } else {
-            // console.log("Error with search data: " + e.data);
-        // }
-    // }
-// });
-
 //Example sending info too toolbar
 //AdvancedMenu.postMessage("Super_array", preferences.Super_array);
 
-/* var toolbar = Toolbar({
-  title: "File Search Toolbar",
-  hidden: false,
-  items: [TennecoLogo, download, email, fs_button]
-});
-
-toolbar.on("show", showing);
-toolbar.on("hide", hiding); 
-
-function showing(e) {
-  console.log("showing: " + e.title);
-}
-
-function hiding(e) {
-  console.log("hiding: " + e.title);
-}*/
-
-//DualViewmanager.addMessageListener("loaded", function(parts) {
-//    var a = parts.data[0];
-//    var b = parts.data[1];
-    
-//    DualViewmanager.sendAsyncMessage("unassignNum", owner);
-//});
-
-// using remove page manager instead?
-// Page mod for dual view
-// pageMod.PageMod({
-    // include: "about:dualview",
-    // contentScriptWhen: 'end',
-    // contentScriptFile: './js/viewer.js',
-    // onAttach: function(worker) {
-        // worker.on('detach', function () {
-            // //Nothing
-        // });
-    // }
-// });
-
 // 7ad46da2-15c9-11e5-b939-0800200c9a66 - open
 // 7ad46da3-15c9-11e5-b939-0800200c9a66 - open
-
-
 
 const aboutDualViewContract = "@mozilla.org/network/protocol/about;1?what=dualview";
 const aboutDualViewDescription = "About Dual View";

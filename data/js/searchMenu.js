@@ -1,7 +1,20 @@
-self.port.on("show", function onShow() {
+self.port.on("show", function onShow() {    
     $('#searchx').focus();
     $('#searchx').select();
 });
+
+// self.port.on("EPF", function epfcheck (data) {
+    // if (data == "ON") {
+        // console.log("EPF ON!");
+        // var epf_but = window.document.getElementById("EPF-button")
+        // epf_but.setAttribute('style', '');
+    // } else {
+        // console.log("EPF OFF!");
+        // var epf_but = window.document.getElementById("EPF-button")
+        // epf_but.setAttribute('style', 'display:none;');
+    // }
+
+// });
 
 //twitter typeahead - works basic
 var substringMatcher = function(strs) {
@@ -27,7 +40,6 @@ var substringMatcher = function(strs) {
 };
 
   $(function() {
-
     self.port.emit("data_load");
     self.port.once("rtn_data",
         function datasmash(theArray) {
@@ -113,8 +125,10 @@ var data_B;
               source: data_Ax
             });
     });  */
-    
-
+$('#EPF-button').click(function(){
+    var terms = window.document.getElementById("searchx").value;
+    self.port.emit("EPF", terms);
+});
 
 $('#searchx').keypress(function(e){
     if(e.which == 13){//Enter key pressed

@@ -73,7 +73,7 @@
 {
 	width:28px;
     position:absolute;
-    margin-left: 14px;
+    margin-left: 6px;
     height:28px;
     background: url("resource://FileSearch-at-tenneco-dot-com/data/images/search.png") 0px 0px no-repeat;
     float:right;
@@ -82,4 +82,25 @@
 }
 #search-button:hover {
    background: url("resource://FileSearch-at-tenneco-dot-com/data/images/search_h.png") 0px 0px no-repeat;
+}
+#EPF-button
+{
+    font-size: 10px;
+    -moz-transform:rotate(90deg);
+    padding: 0em 0em 1.8em 0em;
+    line-height: 14px;
+    background-color: #FFFFFF;
+    margin: 5px 0px 0px 0px;
+	width:22px;
+    position:absolute;
+    margin-left: 35px;
+    height:14px;
+    float:right;
+    border: none;
+	cursor: pointer;
+}
+#EPF-button:hover {
+   border-radius: 2px;
+   background-color: #0097cf;
+   color: #fff;
 }

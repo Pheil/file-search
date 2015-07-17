@@ -11,7 +11,7 @@
     "cross-domain-content": ["http://170.64.172.81/", "http://millap01.na.ten/"]
   },
   "engines": {
-    "firefox": ">=38.0a1"
+    "firefox": ">=39.0"
   },
   "license": "MIT",
     "preferences": [{
