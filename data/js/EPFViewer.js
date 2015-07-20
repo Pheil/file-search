@@ -117,18 +117,11 @@ addMessageListener("thePN", function(msg) {
             var b_list4 = msg.data;
             var x = +document.getElementById("Tree_b_v").getAttribute("value") + +b_list4.length;
             document.getElementById("Tree_b_v").setAttribute("value", x);
-            if (b_list4.length === 0){
+            for(i=b_list4.length-1; i>=0; i--) {
                 var opt = document.createElement('option');
-                opt.value = "";
-                opt.textContent = "None";
+                opt.value = "Quality"; 
+                opt.textContent = b_list4[i];
                 list_b.appendChild(opt);
-            } else {
-                for(i=b_list4.length-1; i>=0; i--) {
-                    var opt = document.createElement('option');
-                    opt.value = "Quality"; 
-                    opt.textContent = b_list4[i];
-                    list_b.appendChild(opt);
-                }
             }
         });
         
@@ -160,18 +153,11 @@ addMessageListener("thePN", function(msg) {
             var cp_list2 = msg.data;
             var x = +document.getElementById("Tree_cp_v").getAttribute("value") + +cp_list2.length;
             document.getElementById("Tree_cp_v").setAttribute("value", x);
-            if (cp_list2.length === 0){
+            for(i=cp_list2.length-1; i>=0; i--) {
                 var opt = document.createElement('option');
-                opt.value = "";
-                opt.textContent = "None";
+                opt.value = "Presentations"; 
+                opt.textContent = cp_list2[i];
                 list_cp.appendChild(opt);
-            } else {
-                for(i=cp_list2.length-1; i>=0; i--) {
-                    var opt = document.createElement('option');
-                    opt.value = "Presentations"; 
-                    opt.textContent = cp_list2[i];
-                    list_cp.appendChild(opt);
-                }
             }
         });
         

@@ -255,13 +255,27 @@ fs_panel.port.on("empty", function () {
     });
 });
 
+function onPrefChange(prefName) {
+    //console.log("The preference " + prefName + " value has changed!");
+    if (prefName == "Part_Number") {
+        if (preferences.Part_Number == "EPF_error") {
+             notifications.notify({
+                title: "File Search Error",
+                text: "EPF search directory does not exist!" ,
+                iconURL: myIconURL
+             });
+        }
+    }
+}
+require("sdk/simple-prefs").on(preferences.Part_Number, onPrefChange);
+
 fs_panel.port.on("EPF", function (search) {
     var pnSearch = search;
     var epfPN;
     var pnCount = pnSearch.length;
     var epfFile;
     var TPTterm;
-    var promises = [];
+    //var promises = [];
     if (pnCount == 6) { // If only six digits then guess GT code
         var arr = new Array("BP00", "CA00", "CM00", "CM05", "CM97", "CM99", "CT00", "FB00", "FB01", "FS32", "FS35", "FS99", "FS28", "FT44", "FT57", "FT99", "KT00", "LA00", "LA01", "LA02", "LA03", "LA04", "LA05", "LA06", "LA07", "LA99", "MB00", "MB01", "MB02", "MB03", "MB04", "MB05", "MB07", "MB08", "MB09", "MB96", "MB99", "MD00", "MM00", "MM01", "MM02", "MM03", "MM04", "MM05", "MS00", "RT01", "RT02", "RT03", "RT04", "RT05", "RT06", "RT07", "RT08", "RT09", "RT10", "RT11", "RT12", "RT13", "RT14", "RT15", "RT99", "SB01", "SB02", "SB03", "SB04", "SB05", "SB06", "SB07", "SB08", "SB96", "SB97", "SB98", "SB99", "SG00", "SG01", "XM00", "XM01", "XM02");
         //var arr = new Array("MB96", "XM01", "XM02");
@@ -271,48 +285,44 @@ fs_panel.port.on("EPF", function (search) {
                 TPTterm = TPTgtterm + "A" + pnSearch; // Sets file to check
                 epfFile = "S://" + TPTterm;
                 //epfPN = epfFile;
-                promises.push(getPN(epfFile)); // push the Promises to our array
+                getPN(epfFile);
             }
         }
+    } else {
+        epfFile = "S://" + String(pnSearch);
+        getPN(epfFile);
     }
-        
-      Promise.all(promises).then(function(dataArr) {
-        dataArr.forEach(function(data) {
-            console.log(epfPN + " / " + data);
-            if (epfPN == data) {
-                //console.log(epfPN.substring(4, 15));
-                preferences.Part_Number = epfPN.substring(4, 15)
-                fs_panel.hide();
-                tabs.open({
-                    url: "about:epfviewer",
-                    isPinned: false,
-                    inNewWindow: false,
-                    inBackground: false
-                }); 
-            } else {
-                notifications.notify({
-                    title: "File Search Error",
-                    text: "No EPF exists for " + search + "!" ,
-                    iconURL: myIconURL
-                });
-            }
-        });
-      }).catch(function(err) {
-        console.log(err);
-      });
     
     function getPN(partnum) {
-        console.log(partnum);
-        epfPN = partnum;
-        return new Promise(function(resolve, reject) {
-            if (OS.File.exists(epfFile)) {
-                console.log(OS.File.exists(epfFile));
-                //epfPN = partnum;
-                resolve(partnum);
+        var promise3 = OS.File.exists(partnum);
+        promise3.then(
+            function (existsValue) {
+                if (existsValue == true) {
+                    preferences.Part_Number = partnum.substring(4, 15);
+                    fs_panel.hide();
+                    tabs.open({
+                        url: "about:epfviewer",
+                        isPinned: false,
+                        inNewWindow: false,
+                        inBackground: false
+                    });
+                } else {
+                    preferences.Part_Number = "EPF_error";
+                }
+            },
+            function (aRejectReason) {
+                 console.log(aRejectReason);
+                 notifications.notify({
+                        title: "File Search Error",
+                        text: "Unknown EPF search error!" ,
+                        iconURL: myIconURL
+                    });
             }
-        });
+        ); 
     }
 });
+
+
 
 EPFViewmanager.addMessageListener("get_pn", function() {
     // Send saved PN to content script when requested
