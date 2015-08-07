@@ -18,15 +18,20 @@ function FSdisplay(terms) {
 
     var folder = "UNKNOWN"; // Sets initial folder value, for error checking
     var aselect = 'P';
+    var label;
 
     // Determines if user is not searching for a part and changes the mode to the correct type
     if (termcode2 == "PS") {
         label = 'fs_ps';
         aselect = 'R';
+        //Replace periods with underscores
+        termsUP = termsUP.replace(/\./g, '_');
     }
     if (termcode2 == "TS") {
         label = 'fs_ts';
         aselect = 'S';
+        //Replace periods with underscores
+        termsUP = termsUP.replace(/\./g, '_');
     }
     if (termcode2 == "MR" || termcode3 == "RFP") {
         label = 'fs_rfp';
@@ -39,13 +44,15 @@ function FSdisplay(terms) {
     if (termcode2 == "MS" && termcode3 != "MSK") {
         label = 'fs_ms';
         aselect = 'M';
+        //Replace periods with underscores
+        termsUP = termsUP.replace(/\./g, '_');
     }
     if (termcode3 == "ECE" || termcode2 == "CE") //First Cost group
     {
         label = 'fs_ece';
         aselect = 'C';
     }
-    if (termcode == "C" && termcount != 11 && termcount != 15) //Second Cost group
+    if (termcode == "C" && termcount != 11 && termcount != 15 && termcode2 != "CB") //Second Cost group
     {
         label = 'fs_ece';
         aselect = 'C';
@@ -93,11 +100,11 @@ function FSdisplay(terms) {
 
     // Start Part Code
     if (termcount == 5) {
-       if (termcode == 0) {
+        if (termcode == 0) {
             folder = "CLEVPRNT/000/";
         } else if (termcode == 1) {
             folder = "CLEVPRNT/100/";
-        } 
+        }
     } else if (termcount == 6) {
         if (termcode == 0) {
             folder = "CLEVPRNT/000/";
@@ -121,7 +128,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         } else if (termcode2 == "X0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode2 == "X1") {// X A Series Drawings
+        } else if (termcode2 == "X1") { // X A Series Drawings
             folder = "CLEVPRNT/100/";
         } else if (termcode2 == "X2") {
             folder = "CLEVPRNT/200/";
@@ -139,7 +146,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         }
     } else if (termcount == 7) {
-        if (termcode3 == "AP1") {// AP A Series Drawings
+        if (termcode3 == "AP1") { // AP A Series Drawings
             folder = "CLEVPRNT/100/";
         } else if (termcode3 == "AP2") {
             folder = "CLEVPRNT/200/";
@@ -147,9 +154,9 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/500/";
         } else if (termcode3 == "AP7") {
             folder = "CLEVPRNT/700/";
-        } 
+        }
     } else if (termcount == 8) {
-        if (termcode3 == "AM2") {// AM A Series Drawings
+        if (termcode3 == "AM2") { // AM A Series Drawings
             folder = "CLEVPRNT/200/";
         } else if (termcode3 == "AM4") {
             folder = "CLEVPRNT/400/";
@@ -157,7 +164,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/600/";
         } else if (termcode3 == "AM8") {
             folder = "CLEVPRNT/800/";
-        } else if (termcode3 == "AP2") {// AP A Series Drawings
+        } else if (termcode3 == "AP2") { // AP A Series Drawings
             folder = "CLEVPRNT/200/";
         } else if (termcode3 == "AP6") {
             folder = "CLEVPRNT/600/";
@@ -165,13 +172,13 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/700/";
         } else if (termcode3 == "AP8") {
             folder = "CLEVPRNT/800/";
-        } else if (termcode4b == "APX1") {// APX A Series Drawings
+        } else if (termcode4b == "APX1") { // APX A Series Drawings
             folder = "CLEVPRNT/100/";
         } else if (termcode3 == "AM9") {
             folder = "CLEVPRNT/900/";
         } else if (termcode3 == "SD0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode3 == "SD1") {// SD A Series Drawings
+        } else if (termcode3 == "SD1") { // SD A Series Drawings
             folder = "CLEVPRNT/100/";
         } else if (termcode3 == "SD2") {
             folder = "CLEVPRNT/200/";
@@ -191,7 +198,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         } else if (termcode3 == "SA0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode3 == "SA1") {// SA A Series Drawings
+        } else if (termcode3 == "SA1") { // SA A Series Drawings
             folder = "CLEVPRNT/100/";
         } else if (termcode3 == "SA2") {
             folder = "CLEVPRNT/200/";
@@ -211,7 +218,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         } else if (termcode3 == "AP1") {
             folder = "CLEVPRNT/100/";
-        } else if (termcode3 == "AP2") {// AP A Series Drawings
+        } else if (termcode3 == "AP2") { // AP A Series Drawings
             folder = "CLEVPRNT/200/";
         } else if (termcode3 == "AP5") {
             folder = "CLEVPRNT/500/";
@@ -225,9 +232,9 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         } else if (termcode3 == "BA2") {
             folder = "CLEVPRNT/200/";
-        } else if (termcode4b == "BA-2") {// BA- A Series Drawings
+        } else if (termcode4b == "BA-2") { // BA- A Series Drawings
             folder = "CLEVPRNT/200/";
-        } else if (termcode3 == "BA5") {// BA A Series Drawings
+        } else if (termcode3 == "BA5") { // BA A Series Drawings
             folder = "CLEVPRNT/500/";
         } else if (termcode3 == "BA6") {
             folder = "CLEVPRNT/600/";
@@ -237,7 +244,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         } else if (termcode3 == "CB0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode3 == "CB4") {// CB A Series Drawings
+        } else if (termcode3 == "CB4") { // CB A Series Drawings
             folder = "CLEVPRNT/400/";
         } else if (termcode3 == "CB6") {
             folder = "CLEVPRNT/600/";
@@ -247,7 +254,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         } else if (termcode3 == "SX1") {
             folder = "CLEVPRNT/100/";
-        } else if (termcode3 == "SX5") {// SX A Series Drawings
+        } else if (termcode3 == "SX5") { // SX A Series Drawings
             folder = "CLEVPRNT/500/";
         } else if (termcode3 == "SX7") {
             folder = "CLEVPRNT/700/";
@@ -257,7 +264,7 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/900/";
         } else if (termcode3 == "IM0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode3 == "IM6") {// IM A Series Drawings
+        } else if (termcode3 == "IM6") { // IM A Series Drawings
             folder = "CLEVPRNT/600/";
         } else if (termcode3 == "IM8") {
             folder = "CLEVPRNT/800/";
@@ -285,9 +292,13 @@ function FSdisplay(terms) {
             folder = "COST/";
         }
     } else if (termcount == 9) {
-        if (termcode4b == "BA-6") {// BA A Series Drawings
+        if (termcode4b == "BA-6") { // BA A Series Drawings
             folder = "CLEVPRNT/600/";
-        } 
+        }
+    } else if (termcount == 10) {
+        if (termcode3 == "CB9") { // CB A Series Drawings
+            folder = "CLEVPRNT/900/";
+        }
     } else if (termcount == 11 || termcount == 15 || termcount == 7 || termcount == 13) // 11&15=Normal B series search, 7=TPT Mode search, 13=TR SDs
     {
         if (termcode == "B") {
@@ -335,7 +346,7 @@ function FSdisplay(terms) {
             } // Special exemption for material query - RM01A532460
             else {
                 // Query is for A Series
-                if (termcode6 == 0) {// Sets folder and new search term minus GTC
+                if (termcode6 == 0) { // Sets folder and new search term minus GTC
                     folder = "CLEVPRNT/000/";
                     termsUP = termcode7;
                 } else if (termcode6 == 1) {
@@ -393,7 +404,7 @@ function FSdisplay(terms) {
             if (termcode4 == "B") {
                 folder = "CLEVPRNT/B_Series/";
             }
-            if (termcode2b == "FS") {// Sets folders for torque rod sales drawings
+            if (termcode2b == "FS") { // Sets folders for torque rod sales drawings
                 folder = "CLEVPRNT/TorqueRods/FS/";
             } else if (termcode2b == "FT") {
                 folder = "CLEVPRNT/TorqueRods/FT/";
@@ -427,7 +438,7 @@ function FSdisplay(terms) {
         }
     }
     // End Part Code
-// Other non part dwg folders if "parts" is not selected
+    // Other non part dwg folders if "parts" is not selected
     if (aselect == "T") {
         folder = "TOOLS/";
     }

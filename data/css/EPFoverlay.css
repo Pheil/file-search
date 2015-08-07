@@ -41,6 +41,8 @@
 {
     font-size: 25px;
     font-weight: bold;
+    text-align: center;
+    display: block;
 }
 #but_launch
 {
@@ -60,17 +62,37 @@
 #Tree_b_v, #Tree_cp_v, #Tree_c_v, #Tree_de_v, #Tree_dc_v, #Tree_pc_v
 {
     background-clip: padding-box;
-    border: 0px;
+    border: 0px none;
     font-size: 15px;
     font-style: italic;
     text-align: center;
     background-color: rgba(0,0,0,0);
+    width: 25px;
+    text-align: center;
+    display: block;
+    color: #FFF;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.counts {
+    position:fixed;
+    left:22%;
+    margin:0px;
+    width: 3%;
+    height: 95px;
+    background-color: #534E4E;
+    border: 1px solid #CCC;
 }
 
 .labels {
     position:fixed;
-    left:5px;
-    margin:5px;
+    left:0px;
+    margin:0px;
+    width: 22%;
+    height: 95px;
+    border: 1px solid #ccc;
+    background-color: #729E72;
 }
 .a1 {
     top:115px;
@@ -93,7 +115,7 @@
 
 .styled-select select {
    background: transparent;
-   width: 650px;
+   width: 75%;
    height: 95px;
    padding: 0px;
    font-size: 12px;
@@ -105,10 +127,10 @@
    
 .styled-select {
     position:fixed;
-    right:5px;
-    width: 650px;
+    right:0px;
+    width: 75%;
     height: 95px;
-    min-width:650px;
+    min-width:75%;
     overflow: hidden;
     background: #ddd;
     border: 1px solid #ccc;
@@ -118,6 +140,6 @@
 #Builds, #Correspondence_and_Presentations, #Costs, #Design_and_Engineering, #Dimension_Checks, #Prints_and_CAD
 {
     position:fixed;
-    right:5px;
-    min-width:650px;
+    right:0px;
+    min-width:75%;
 }

@@ -8,7 +8,8 @@
   "main": "index.js",
   "author": "Paul Heil",
   "permissions": {
-    "cross-domain-content": ["http://170.64.172.81/", "http://millap01.na.ten/"]
+    "cross-domain-content": ["http://170.64.172.81/", "http://millap01.na.ten/"],
+    "private-browsing": true
   },
   "engines": {
     "firefox": ">=39.0"
@@ -27,6 +28,13 @@
         "type": "bool",
         "value": true
     },
+    {
+        "name": "EWSDirectPrint",
+        "title": "Replace drawing links on worksheets to direct links.",
+        "type": "bool",
+        "value": true
+    },
+
     {
         "name": "PanelClose",
         "title": "Auto close search panel after search",

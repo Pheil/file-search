@@ -3,19 +3,7 @@ self.port.on("show", function onShow() {
     $('#searchx').select();
 });
 
-// self.port.on("EPF", function epfcheck (data) {
-    // if (data == "ON") {
-        // console.log("EPF ON!");
-        // var epf_but = window.document.getElementById("EPF-button")
-        // epf_but.setAttribute('style', '');
-    // } else {
-        // console.log("EPF OFF!");
-        // var epf_but = window.document.getElementById("EPF-button")
-        // epf_but.setAttribute('style', 'display:none;');
-    // }
-
-// });
-
+//START BASIC WORKING
 //twitter typeahead - works basic
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
@@ -39,7 +27,7 @@ var substringMatcher = function(strs) {
   };
 };
 
-  $(function() {
+ /*  $(function() {
     self.port.emit("data_load");
     self.port.once("rtn_data",
         function datasmash(theArray) {
@@ -65,66 +53,140 @@ var substringMatcher = function(strs) {
               }
             });
     });
-  }); 
+  });  */
   
-//twitter typeahead - multiple sources - not working
-/* var nbaTeams = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Part'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '../data/nba.json'
-});
- 
-var nhlTeams = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Tool'),
-  queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '../data/nhl.json'
-}); */
-/* var data_A;
-var data_B;
-    self.port.emit("data_load_A");
-    self.port.once("rtn_data_A",
-        function datasmash(theArray) {
-            console.log("Panel received data A");
-            data_A = theArray.split(', ');
-            
-             var data_Ax = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Part'),
+//END BASIC WORKING - ABOVE WORKS
+  
+//twitter typeahead - multiple sources - not working 100% yet
+     self.port.emit("data_load_test");
+    self.port.once("rtn_data_test",
+        function datasmash() {  //add theArray to function then uncomment to use data from index.js
+            //var parseddataA = theArray[0];
+            //var parseddataB = theArray[1];
+            //var data_Aa = JSON.parse(parseddataA);
+            //var data_Ba = JSON.parse(parseddataB);
+            var parts = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data_A
+              //local: data_Aa
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/partsx.json',
             });
-    });
-    self.port.emit("data_load_B");
-    self.port.once("rtn_data_B",
-        function datasmash(theArray) {
-            console.log("Panel received data B");
-            data_B = theArray.split(', ');
             
-            var data_Bx = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Tool'),
+            var ms = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data_B
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/msx.json',
             });
-    }); */
+            
+            var ps = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/psx.json',
+            });
+            
+            var rfps = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/rfpsx.json',
+            });
+            
+            var ts = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              //local: data_Ba
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/tsx.json',
+            });
+            
+            var costs = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/costsx.json',
+            });
+            
+            var sketches = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/sketchesx.json',
+            });
+            
+            var tools = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              prefetch: 'http://170.64.172.81/scripts/FileSearch/toolsx.json',
+            });
+            
+            $('#the-basics .typeahead').typeahead({
+              hint: true,
+              highlight: true,
+              minLength: 0
+            },
+            {
+              name: 'parts',
+              source: parts,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Parts</div>'
+              }
+            },
+            {
+              name: 'ms',
+              source: ms,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Material Specs</div>'
+              }
+            },
+            {
+              name: 'ps',
+              source: ps,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Process Specs</div>'
+              }
+            },
+            {
+              name: 'rfps',
+              source: rfps,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Release for Productions</div>'
+              }
+            },
+            {
+              name: 'ts',
+              source: ts,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Test Specs</div>'
+              }
+            },
+            {
+              name: 'costs',
+              source: costs,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Costs</div>'
+              }
+            },
+            {
+              name: 'sketches',
+              source: sketches,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Sketches</div>'
+              }
+            },
+            {
+              name: 'tools',
+              source: tools,
+              limit: 250,
+              templates: {
+                header: '<div class="file-name">Tools</div>'
+              }
+            });
+    }); 
+
     
-//3
-/*     self.port.emit("data_load_A");
-    self.port.once("rtn_data_A",
-        function datasmash(theArray) {
-            console.log("Panel received data A");
-            var data_A = theArray;
-            
-            var data_Ax = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Part'),
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              local: data_A
-            });
-            
-            $('#the-basics .typeahead').typeahead(null, {
-              name: 'best-pictures',
-              display: 'Part',
-              source: data_Ax
-            });
-    });  */
 $('#EPF-button').click(function(){
     var terms = window.document.getElementById("searchx").value;
     self.port.emit("EPF", terms);
@@ -192,7 +254,7 @@ $('#search-button').click(function(){
             label = 'fs_ece';
             aselect = 'C';
         }
-        if (termcode == "C" && termcount != 11 && termcount != 15) //Second Cost group
+        if (termcode == "C" && termcount != 11 && termcount != 15 && termcode2 != "CB") //Second Cost group
         {
             label = 'fs_ece';
             aselect = 'C';
@@ -430,6 +492,14 @@ $('#search-button').click(function(){
                 folder = "CLEVPRNT/900/";
             } else if (termcode == "C") {
                 folder = "COST/";
+            }
+        } else if (termcount == 9) {
+            if (termcode4b == "BA-6") { // BA A Series Drawings
+                folder = "CLEVPRNT/600/";
+            }
+        } else if (termcount == 10) {
+            if (termcode3 == "CB9") { // CB A Series Drawings
+                folder = "CLEVPRNT/900/";
             }
         } else if (termcount == 11 || termcount == 15 || termcount == 7 || termcount == 13) // 11&15=Normal B series search, 7=TPT Mode search, 13=TR SDs
         {

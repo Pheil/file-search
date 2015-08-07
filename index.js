@@ -199,6 +199,40 @@ pageMod.PageMod({
                  '  head.appendChild(link);'
 });
 
+//Page mod for worksheet links (in_ewr_id=XXXXX & in_ewr_no=XXXXX)
+pageMod.PageMod({
+  include: "http://pafoap01:8888/pls/prod/ece_ewo_web.ece_ewo_page?in_ewr_*",
+  contentScriptWhen: 'end',
+  contentScriptFile: './js/directPart.js',
+  onAttach: function(worker) {
+    worker.on('message', function(message) {
+        if (preferences.EWSDirectPrint) {
+            var url = message.url;
+            var part = message.element;
+            if (url.contains("p_part_id")) {
+                //console.log('URL: ' + message.url);
+                //console.log('Target: ' + /[^\s]+/.exec(part));
+                var urlCHK = fileURL.FSdisplay(String(/[^\s]+/.exec(part)));
+
+                if (urlCHK == "unknown") {
+                    //Do nothing
+                } else {
+                    //Replace old href with new urlCHK
+                    var URLs = JSON.stringify({
+                        url_new: urlCHK,
+                        url_old: url
+                    });
+                    worker.postMessage(URLs);
+                    //console.log(urlCHK); 
+                }
+            } else {
+                //Do nothing
+            }
+        }
+    });
+  }
+});
+
 
 var fs_button = ToggleButton({
   id: "fs-search",
@@ -247,6 +281,68 @@ fs_panel.port.on("data_load", function () {
     httpRequest.get();
 });
 
+fs_panel.port.on("data_load_test", function () {
+    //START TEST - THIS DOES WORK, but not needed
+/*     function get(url) {
+      var requestPromise = new Promise(function(resolve, reject) {
+         var httpRequest = Request({
+             url: url,
+             headers: {
+                 'Cache-control': 'no-cache'
+             },
+             onComplete: function (response) {
+                 resolve(response.text);
+             }
+         });
+         httpRequest.get();
+      });
+
+      return Promise.all([requestPromise, ]).then(function(results) {
+        return results;
+      });
+    }
+    
+    function getJSON(url) {
+      return get(url).then(JSON.parse);
+    }
+    function getJSON2(url) {
+      return get(url);
+    }
+    var arr = [];
+    
+    getJSON('http://170.64.172.81/scripts/FileSearch/dataFiles.json').then(function(data) {
+      //addHtmlToPage(data.heading);
+        //console.log(data);
+      // Take an array of promises and wait on them all
+      return Promise.all(
+        // Map our array of chapter urls to
+        // an array of chapter json promises
+        data.fileUrls.map(getJSON2)
+      );
+    }).then(function(chapters) {
+        //console.log(chapters);
+      // Now we have the chapters jsons in order! Loop through…
+      chapters.forEach(function(chapter) {
+          //console.log(chapter);
+        // …and add to the page
+        //addHtmlToPage(chapter.html);
+        arr.push(chapter);
+        //arr.property = chapter;
+      });
+      //addTextToPage("All done");
+      console.log("Done");
+    }).catch(function(err) {
+      // catch any error that happened so far
+      //addTextToPage("Argh, broken: " + err.message);
+      console.log("Argh, broken: " + err.message);
+    }).then(function() {
+      //document.querySelector('.spinner').style.display = 'none';
+      fs_panel.port.emit("rtn_data_test", arr);
+    }); */
+//END TEST -    
+fs_panel.port.emit("rtn_data_test");  
+});
+
 fs_panel.port.on("empty", function () {
     notifications.notify({
         title: "File Search Error",
@@ -270,6 +366,7 @@ function onPrefChange(prefName) {
 require("sdk/simple-prefs").on(preferences.Part_Number, onPrefChange);
 
 fs_panel.port.on("EPF", function (search) {
+    preferences.Part_Number = "";
     var pnSearch = search;
     var epfPN;
     var pnCount = pnSearch.length;
@@ -287,6 +384,9 @@ fs_panel.port.on("EPF", function (search) {
                 //epfPN = epfFile;
                 getPN(epfFile);
             }
+        } else {
+            epfFile = "S://" + String(pnSearch);
+            getPN(epfFile);
         }
     } else {
         epfFile = "S://" + String(pnSearch);
@@ -306,8 +406,11 @@ fs_panel.port.on("EPF", function (search) {
                         inNewWindow: false,
                         inBackground: false
                     });
-                } else {
-                    preferences.Part_Number = "EPF_error";
+                    return;
+                } else if (existsValue == false) {
+                    //This does not work due to looping through some that will be false AND some true
+                    //preferences.Part_Number = "EPF_error";
+                    return;
                 }
             },
             function (aRejectReason) {
@@ -428,15 +531,15 @@ var PasteGo = ActionButton({
     icon: {
       "16": "./images/PG16.png",
       "32": "./images/PG32.png",
-      "32": "./images/PG64.png",
+      "64": "./images/PG64.png",
     },
     onClick: function(state) {
         var pastetext = clipboard.get();
 
         if (pastetext)
         {
-            pastetext = pastetext.replace(/^[\r\n]+|\.|[\r\n]+$/g, '');//Remove leading / trailing carriage returns / line feeds
             console.log("Original paste & go value: '" + pastetext + "'");
+            pastetext = pastetext.replace(/^[\r\n]+|[\r\n]+$/g, '');//Remove leading / trailing carriage returns / line feeds
         }
         //Replace search text if matches found in whitelist
         var wltext = wl.wlCompare(pastetext);
@@ -470,7 +573,8 @@ var email = ActionButton({
     label: "Email current PDF",
     icon: {
       "16": "./images/email.png",
-      "32": "./images/email32.png"
+      "32": "./images/email32.png",
+      "64": "./images/email64.png"
     },
     onClick: function(state) {  
      
@@ -507,7 +611,7 @@ var email = ActionButton({
             var email_pdf = pdf_dir + "\\" + open_PDF_name2 + "_" + df + ".pdf";
             DownloadFile(email_pdf,data_URL.href);
 
-            const myurl = "mailto://?subject=" + open_PDF_name2 + "%20Print&body=%0AAttached%20is%20the%20Tenneco%20" + open_PDF_name2 + "%20print.%0A%0A&attach=" + email_pdf + "";
+            const myurl = "mailto://?subject=" + open_PDF_name2 + "%20Print&body=%0AAttached%20is%20the%20Tenneco%20" + open_PDF_name2 + "%20print.%20%20If%20you%20have%20any%20issues%20opening%20the%20file%20let%20me%20know%0A%0A&attach=" + email_pdf + "";
             
             //Open in hidden frame to not leave behind a blank tab
             var hiddenFrames = require("sdk/frame/hidden-frame");
