@@ -258,7 +258,7 @@ var fs_panel = panels.Panel({
     onHide: handleHide,
     //onShow: handleShow,
     contentScriptWhen: 'end',
-    contentScriptFile: ["./js/jquery-1.10.2.js",
+    contentScriptFile: ["./js/jquery-2.1.4.js",
                       "./js/typeahead.bundle.js",
                       "./js/searchMenu.js"]
 });

@@ -27,7 +27,8 @@ var substringMatcher = function(strs) {
   };
 };
 
- /*  $(function() {
+//BASIC WORKING
+/*    $(function() {
     self.port.emit("data_load");
     self.port.once("rtn_data",
         function datasmash(theArray) {
@@ -53,11 +54,11 @@ var substringMatcher = function(strs) {
               }
             });
     });
-  });  */
+  }); */  
   
 //END BASIC WORKING - ABOVE WORKS
   
-//twitter typeahead - multiple sources - not working 100% yet
+//twitter typeahead - multiple sources - not working 100% yet, need next version of typeahead
      self.port.emit("data_load_test");
     self.port.once("rtn_data_test",
         function datasmash() {  //add theArray to function then uncomment to use data from index.js
@@ -66,51 +67,131 @@ var substringMatcher = function(strs) {
             //var data_Aa = JSON.parse(parseddataA);
             //var data_Ba = JSON.parse(parseddataB);
             var parts = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               //local: data_Aa
               prefetch: 'http://170.64.172.81/scripts/FileSearch/partsx.json',
             });
             
             var ms = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: 'http://170.64.172.81/scripts/FileSearch/msx.json',
             });
             
             var ps = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: 'http://170.64.172.81/scripts/FileSearch/psx.json',
             });
             
             var rfps = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: 'http://170.64.172.81/scripts/FileSearch/rfpsx.json',
             });
             
             var ts = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               //local: data_Ba
               prefetch: 'http://170.64.172.81/scripts/FileSearch/tsx.json',
             });
             
             var costs = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: 'http://170.64.172.81/scripts/FileSearch/costsx.json',
             });
             
             var sketches = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: 'http://170.64.172.81/scripts/FileSearch/sketchesx.json',
             });
             
             var tools = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              //datumTokenizer: Bloodhound.tokenizers.whitespace,
+              datumTokenizer: function(d){
+                    var tokens = [];
+                    var stringSize = d.length;
+                    for (var size = 1; size <= stringSize; size++){          
+                      for (var i = 0; i+size<= stringSize; i++){
+                          tokens.push(d.substr(i, size));
+                      }
+                    }
+                    return tokens;
+                },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               prefetch: 'http://170.64.172.81/scripts/FileSearch/toolsx.json',
             });
@@ -184,7 +265,7 @@ var substringMatcher = function(strs) {
                 header: '<div class="file-name">Tools</div>'
               }
             });
-    }); 
+    });  
 
     
 $('#EPF-button').click(function(){

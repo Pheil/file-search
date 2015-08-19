@@ -57,9 +57,12 @@ function FSdisplay(terms) {
         label = 'fs_ece';
         aselect = 'C';
     }
-    if (termcode2 == "SK") {
+    if (termcode2 == "SK" || termcode3 == "ESK") {
         label = 'fs_sk';
         aselect = 'K';
+        if (termcode3 == "ESK") {
+            termsUP = termsUP.substr(1);
+        }
     }
     if (termcode2 == "MT" || termcode2 == "PT" || termcode2 == "TX" || termcode2 == "M-") { //First Tool group
         label = 'Tools';

@@ -2,7 +2,7 @@
   "title": "File Search",
   "id": "FileSearch@tenneco.com",
   "name": "file-search",
-  "version": "9.0.0",
+  "version": "9.0.1",
   "homepage": "http://tamilan.na.ten/cae/",
   "description": "Enter file names to easily display the file.  Works for the following files:  Drawing files (Parts), Costs, Specs, Tools, Sketches, Test Specs, Process Specs, Material Specs, Worksheets, Electronic Part Files and RFPs",
   "main": "index.js",
