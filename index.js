@@ -576,78 +576,88 @@ var email = ActionButton({
       "32": "./images/email32.png",
       "64": "./images/email64.png"
     },
-    onClick: function(state) {  
-     
-        function DownloadFile(sLocalFileName, sRemoteFileName){
-            var oIOService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService)
-            var oLocalFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
-            oLocalFile.initWithPath(sLocalFileName);
-
-            var oDownloadObserver = {onDownloadComplete: function(nsIDownloader, nsresult, oFile) {console.log('PDF downloaded, ready for email.')}};
-            var oDownloader = Cc["@mozilla.org/network/downloader;1"].createInstance();
-            oDownloader.QueryInterface(Ci.nsIDownloader);
-            oDownloader.init(oDownloadObserver, oLocalFile);
-
-            var oHttpChannel = oIOService.newChannel(sRemoteFileName, "", null);
-            oHttpChannel.QueryInterface(Ci.nsIHttpChannel);
-            oHttpChannel.asyncOpen(oDownloader, oLocalFile);   
-        }
-    
-        // Get URL and file name from active window PDF
-        var recentWindow = utils.getMostRecentBrowserWindow();
-        var window = recentWindow.content;
-        var data_URL = recentWindow ? recentWindow.content.document.location : null;
-        var n = occurrences(String(data_URL), ".pdf");
-        if (n == 1) {
-            //console.log(data_URL);  //Additional data available from var
-            var open_PDF_name = data_URL.href.match(/[a-zA-Z0-9-_]+\.pdf/i); //With .pdf
-            var open_PDF_name2 = String(open_PDF_name).replace(/.pdf/i, ""); //Without .pdf
-
-            // Sets dir to desktop.
-            var pdf_dir = require('sdk/system').pathFor('Desk');
-   
-            var d = new Date();
-            var df = "" + (d.getMonth() + 1) + d.getDate() + d.getFullYear();
-            var email_pdf = pdf_dir + "\\" + open_PDF_name2 + "_" + df + ".pdf";
-            DownloadFile(email_pdf,data_URL.href);
-
-            const myurl = "mailto://?subject=" + open_PDF_name2 + "%20Print&body=%0AAttached%20is%20the%20Tenneco%20" + open_PDF_name2 + "%20print.%20%20If%20you%20have%20any%20issues%20opening%20the%20file%20let%20me%20know%0A%0A&attach=" + email_pdf + "";
-            
-            //Open in hidden frame to not leave behind a blank tab
-            var hiddenFrames = require("sdk/frame/hidden-frame");
-            let hiddenFrame = hiddenFrames.add(hiddenFrames.HiddenFrame({
-              onReady: function() {
-                this.element.contentWindow.location = myurl;
-                let self = this;
-                this.element.addEventListener("DOMContentLoaded", function() {
-                    hiddenFrames.remove(hiddenFrame);
-                }, true, true);
-              }
-            })); 
-        } else {
-            notifications.notify({
-                title: "File Search Error",
-                text: "Cannot save PDF from URL: \n\n" + ' ' + data_URL,
-                iconURL: myIconURL
-            });
-            console.error("Cannot verify page URL contains PDF");
-        }
-        
-        function occurrences(string, subString, allowOverlapping) {
-            string+=""; subString+="";
-            if(subString.length<=0) return string.length+1;
-
-            var n=0, pos=0;
-            var step=(allowOverlapping)?(1):(subString.length);
-
-            while(true){
-                pos=string.indexOf(subString,pos);
-            if(pos>=0){ n++; pos+=step; } else break;
-            }
-            return(n);
-        }
-    }
+    onClick: logContentAsync
 });
+
+function DownloadFile(sLocalFileName, sRemoteFileName){
+    var oIOService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService)
+    var oLocalFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+    oLocalFile.initWithPath(sLocalFileName);
+
+    var oDownloadObserver = {onDownloadComplete: function(nsIDownloader, nsresult, oFile) {console.log('PDF downloaded, ready for email.')}};
+    var oDownloader = Cc["@mozilla.org/network/downloader;1"].createInstance();
+    oDownloader.QueryInterface(Ci.nsIDownloader);
+    oDownloader.init(oDownloadObserver, oLocalFile);
+
+    var oHttpChannel = oIOService.newChannel(sRemoteFileName, "", null);
+    oHttpChannel.QueryInterface(Ci.nsIHttpChannel);
+    oHttpChannel.asyncOpen(oDownloader, oLocalFile);   
+}
+                        
+function logContent(message) {
+    var n = occurrences(String(message.data.href), ".pdf");
+    if (n == 1) {
+        //console.log(data_URL);  //Additional data available from var
+        var open_PDF_name = message.data.href.match(/[a-zA-Z0-9-_]+\.pdf/i); //With .pdf
+        var open_PDF_name2 = String(open_PDF_name).replace(/.pdf/i, ""); //Without .pdf
+
+        // Sets dir to desktop.
+        var pdf_dir = require('sdk/system').pathFor('Desk');
+
+        var d = new Date();
+        var df = "" + (d.getMonth() + 1) + d.getDate() + d.getFullYear();
+        var email_pdf = pdf_dir + "\\" + open_PDF_name2 + "_" + df + ".pdf";
+        DownloadFile(email_pdf,message.data.href);
+
+        const myurl = "mailto://?subject=" + open_PDF_name2 + "%20Print&body=%0AAttached%20is%20the%20Tenneco%20" + open_PDF_name2 + "%20print.%20%20If%20you%20have%20any%20issues%20opening%20the%20file%20let%20me%20know%0A%0A&attach=" + email_pdf + "";
+        
+        //Open in hidden frame to not leave behind a blank tab
+        var hiddenFrames = require("sdk/frame/hidden-frame");
+        let hiddenFrame = hiddenFrames.add(hiddenFrames.HiddenFrame({
+          onReady: function() {
+            this.element.contentWindow.location = myurl;
+            let self = this;
+            this.element.addEventListener("DOMContentLoaded", function() {
+                hiddenFrames.remove(hiddenFrame);
+            }, true, true);
+          }
+        })); 
+    } else {
+        notifications.notify({
+            title: "File Search Error",
+            text: "Cannot save PDF from URL: \n\n" + ' ' + message.data,
+            iconURL: myIconURL
+        });
+        console.error("Cannot verify page URL contains PDF");
+    }
+}
+
+function logContentAsync() {   
+     // Get URL and file name from active window PDF
+    var tab = require("sdk/tabs").activeTab;
+    var xulTab = require("sdk/view/core").viewFor(tab);
+    var xulBrowser = require("sdk/tabs/utils").getBrowserForTab(xulTab);
+
+    var browserMM = xulBrowser.messageManager;
+    browserMM.loadFrameScript(self.data.url("js/frame-script.js"), false);
+    browserMM.addMessageListener("FileSearch-at-tenneco-dot-com:got-content",
+                           logContent);
+}                          
+
+function occurrences(string, subString, allowOverlapping) {
+    string+=""; subString+="";
+    if(subString.length<=0) return string.length+1;
+
+    var n=0, pos=0;
+    var step=(allowOverlapping)?(1):(subString.length);
+
+    while(true){
+        pos=string.indexOf(subString,pos);
+    if(pos>=0){ n++; pos+=step; } else break;
+    }
+    return(n);
+}
+
 
 function Write_data(name, data){
     var deferred = defer();
