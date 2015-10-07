@@ -5,7 +5,7 @@ self.port.on("show", function onShow() {
 
 //START BASIC WORKING
 //twitter typeahead - works basic
-var substringMatcher = function(strs) {
+/* var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
  
@@ -25,7 +25,7 @@ var substringMatcher = function(strs) {
  
     cb(matches);
   };
-};
+}; */
 
 //BASIC WORKING
 /*    $(function() {
@@ -58,14 +58,25 @@ var substringMatcher = function(strs) {
   
 //END BASIC WORKING - ABOVE WORKS
   
-//twitter typeahead - multiple sources - not working 100% yet, need next version of typeahead
-     self.port.emit("data_load_test");
-    self.port.once("rtn_data_test",
-        function datasmash() {  //add theArray to function then uncomment to use data from index.js
-            //var parseddataA = theArray[0];
-            //var parseddataB = theArray[1];
-            //var data_Aa = JSON.parse(parseddataA);
-            //var data_Ba = JSON.parse(parseddataB);
+//twitter typeahead - multiple sources
+//Using prefetch causes UI delay on start - do not use
+    self.port.emit("data_load_mul");
+    self.port.once("rtn_data_mul",
+        function datasmash(theArray) {  //add theArray to function then uncomment to use data from index.js
+            var parseddataB = theArray[0],
+                parseddataC = theArray[1],
+                parseddataD = theArray[2],
+                parseddataE = theArray[3],
+                parseddataF = theArray[4],
+                parseddataG = theArray[5],
+                parseddataH = theArray[6],
+                data_ms = JSON.parse(parseddataB),
+                data_parts = JSON.parse(parseddataC),
+                data_ps = JSON.parse(parseddataD),
+                data_rfp = JSON.parse(parseddataE),
+                data_sk = JSON.parse(parseddataF),
+                data_tool = JSON.parse(parseddataG),
+                data_ts = JSON.parse(parseddataH);
             var parts = new Bloodhound({
               //datumTokenizer: Bloodhound.tokenizers.whitespace,
               datumTokenizer: function(d){
@@ -79,8 +90,9 @@ var substringMatcher = function(strs) {
                     return tokens;
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              //local: data_Aa
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/partsx.json',
+              local: data_parts
+              //remote: 'http://170.64.172.81/scripts/FileSearch/partsx.json',
+              //prefetch: 'http://170.64.172.81/scripts/FileSearch/partsx.json',
             });
             
             var ms = new Bloodhound({
@@ -96,7 +108,9 @@ var substringMatcher = function(strs) {
                     return tokens;
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/msx.json',
+              local: data_ms
+              //remote: 'http://170.64.172.81/scripts/FileSearch/msx.json',
+              //prefetch: 'http://170.64.172.81/scripts/FileSearch/msx.json',
             });
             
             var ps = new Bloodhound({
@@ -112,7 +126,9 @@ var substringMatcher = function(strs) {
                     return tokens;
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/psx.json',
+              local: data_ps
+              //remote: 'http://170.64.172.81/scripts/FileSearch/psx.json',
+              //prefetch: 'http://170.64.172.81/scripts/FileSearch/psx.json',
             });
             
             var rfps = new Bloodhound({
@@ -128,7 +144,9 @@ var substringMatcher = function(strs) {
                     return tokens;
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/rfpsx.json',
+              local: data_rfp
+              //remote: 'http://170.64.172.81/scripts/FileSearch/rfpsx.json',
+              //prefetch: 'http://170.64.172.81/scripts/FileSearch/rfpsx.json',
             });
             
             var ts = new Bloodhound({
@@ -144,24 +162,9 @@ var substringMatcher = function(strs) {
                     return tokens;
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              //local: data_Ba
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/tsx.json',
-            });
-            
-            var costs = new Bloodhound({
-              //datumTokenizer: Bloodhound.tokenizers.whitespace,
-              datumTokenizer: function(d){
-                    var tokens = [];
-                    var stringSize = d.length;
-                    for (var size = 1; size <= stringSize; size++){          
-                      for (var i = 0; i+size<= stringSize; i++){
-                          tokens.push(d.substr(i, size));
-                      }
-                    }
-                    return tokens;
-                },
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/costsx.json',
+              local: data_ts
+              //remote: 'http://170.64.172.81/scripts/FileSearch/tsx.json',
+              //prefetch: 'http://170.64.172.81/scripts/FileSearch/tsx.json',
             });
             
             var sketches = new Bloodhound({
@@ -177,8 +180,15 @@ var substringMatcher = function(strs) {
                     return tokens;
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/sketchesx.json',
+              local: data_sk
+              //remote: 'http://170.64.172.81/scripts/FileSearch/sketchesx.json',
+              //prefetch: 'http://170.64.172.81/scripts/FileSearch/sketchesx.json',
             });
+            
+/*             var notFound = function () {
+                // put whatever
+                return '<div class="">Not found</div>';
+            }; */
             
             var tools = new Bloodhound({
               //datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -193,7 +203,9 @@ var substringMatcher = function(strs) {
                     return tokens;
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              prefetch: 'http://170.64.172.81/scripts/FileSearch/toolsx.json',
+              local: data_tool
+              //remote: 'http://170.64.172.81/scripts/FileSearch/toolsx.json',
+              //prefetch: 'http://170.64.172.81/scripts/FileSearch/toolsx.json',
             });
             
             $('#the-basics .typeahead').typeahead({
@@ -204,7 +216,7 @@ var substringMatcher = function(strs) {
             {
               name: 'parts',
               source: parts,
-              limit: 250,
+              limit: 75,
               templates: {
                 header: '<div class="file-name">Parts</div>'
               }
@@ -212,7 +224,7 @@ var substringMatcher = function(strs) {
             {
               name: 'ms',
               source: ms,
-              limit: 250,
+              limit: 20,
               templates: {
                 header: '<div class="file-name">Material Specs</div>'
               }
@@ -220,7 +232,7 @@ var substringMatcher = function(strs) {
             {
               name: 'ps',
               source: ps,
-              limit: 250,
+              limit: 20,
               templates: {
                 header: '<div class="file-name">Process Specs</div>'
               }
@@ -228,7 +240,7 @@ var substringMatcher = function(strs) {
             {
               name: 'rfps',
               source: rfps,
-              limit: 250,
+              limit: 20,
               templates: {
                 header: '<div class="file-name">Release for Productions</div>'
               }
@@ -236,23 +248,15 @@ var substringMatcher = function(strs) {
             {
               name: 'ts',
               source: ts,
-              limit: 250,
+              limit: 20,
               templates: {
                 header: '<div class="file-name">Test Specs</div>'
               }
             },
             {
-              name: 'costs',
-              source: costs,
-              limit: 250,
-              templates: {
-                header: '<div class="file-name">Costs</div>'
-              }
-            },
-            {
               name: 'sketches',
               source: sketches,
-              limit: 250,
+              limit: 20,
               templates: {
                 header: '<div class="file-name">Sketches</div>'
               }
@@ -260,7 +264,7 @@ var substringMatcher = function(strs) {
             {
               name: 'tools',
               source: tools,
-              limit: 250,
+              limit: 20,
               templates: {
                 header: '<div class="file-name">Tools</div>'
               }
@@ -311,103 +315,84 @@ $('#search-button').click(function(){
 
         // Determines if user is not searching for a part and changes the mode to the correct type
         if (termcode2 == "PS") {
-            label = 'fs_ps';
             aselect = 'R';
         }
         if (termcode2 == "TS") {
-            label = 'fs_ts';
             aselect = 'S';
         }
         if (termcode2 == "MR" || termcode3 == "RFP") {
-            label = 'fs_rfp';
             aselect = 'D';
         }
         if (termcode3 == "EWS") {
-            label = 'fs_ews';
             aselect = 'E';
         }
         if (termcode2 == "MS" && termcode3 != "MSK") {
-            label = 'fs_ms';
             aselect = 'M';
         }
-        if (termcode3 == "ECE" || termcode2 == "CE") //First Cost group
-        {
-            label = 'fs_ece';
+        if (termcode3 == "ECE" || termcode2 == "CE") { //First Cost group
             aselect = 'C';
         }
-        if (termcode == "C" && termcount != 11 && termcount != 15 && termcode2 != "CB") //Second Cost group
-        {
-            label = 'fs_ece';
+        if (termcode == "C" && termcount != 11 && termcount != 15 && termcode2 != "CB") { //Second Cost group
             aselect = 'C';
         }
         if (termcode2 == "SK") {
-            label = 'fs_sk';
             aselect = 'K';
         }
         if (termcode2 == "MT" || termcode2 == "PT" || termcode2 == "TX" || termcode2 == "M-") { //First Tool group
-            label = 'Tools';
             aselect = 'T';
         }
         if (termcode == "M" && termcount == 6 && termcode2 != "MR") { //Second Tool group
-            label = 'Tools';
             aselect = 'T';
         }
         if (termcode3 == "MSK") { //Third Tool group
-            label = 'Tools';
             aselect = 'T';
         }
         if (termcode == "M" && termcount == 8) { //Fourth Tool group
-            label = 'Tools';
             aselect = 'T';
         }
         if (termcode == "M" && termcount == 9) { //Fifth Tool group
-            label = 'Tools';
             aselect = 'T';
         }
         if (termcode == "M" && termcount == 7 && termcode2 != "MR" && termcode2 != "MS") { //Sixth Tool group
-            label = 'Tools';
             aselect = 'T';
         }
         if (termsUP == "INDEX_MS") {
-            label = 'fs_ms';
             aselect = 'M';
         }
         if (termsUP == "INDEX_PS") {
-            label = 'fs_ps';
             aselect = 'R';
         }
         if (termsUP == "INDEX_TS") {
-            label = 'fs_ts';
             aselect = 'S';
         }
 
         // Start Part Code
         if (termcount == 5) {
-           if (termcode == 0) {
+           if (termcode == "0") {
                 folder = "CLEVPRNT/000/";
-            } else if (termcode == 1) {
+            } else if (termcode == "1") {
                 folder = "CLEVPRNT/100/";
             } 
         } else if (termcount == 6) {
-            if (termcode == 0) {
+            if (termcode == "0") {
                 folder = "CLEVPRNT/000/";
-            } else if (termcode == 1) {
+            } else if (termcode == "1") {
                 folder = "CLEVPRNT/100/";
-            } else if (termcode == 2) {
+            } else if (termcode == "2") {
                 folder = "CLEVPRNT/200/";
-            } else if (termcode == 3) {
+            } else if (termcode == "3") {
                 folder = "CLEVPRNT/300/";
-            } else if (termcode == 4) {
+            } else if (termcode == "4") {
                 folder = "CLEVPRNT/400/";
-            } else if (termcode == 5) {
+            } else if (termcode == "5") {
                 folder = "CLEVPRNT/500/";
-            } else if (termcode == 6) {
+            } else if (termcode == "6") {
                 folder = "CLEVPRNT/600/";
-            } else if (termcode == 7) {
+            } else if (termcode == "7") {
                 folder = "CLEVPRNT/700/";
-            } else if (termcode == 8) {
+            } else if (termcode == "8") {
                 folder = "CLEVPRNT/800/";
-            } else if (termcode == 9) {
+            } else if (termcode == "9") {
                 folder = "CLEVPRNT/900/";
             } else if (termcode2 == "X0") {
                 folder = "CLEVPRNT/000/";
@@ -551,25 +536,25 @@ $('#search-button').click(function(){
                 folder = "CLEVPRNT/600/";
             } else if (termcode3 == "IM8") {
                 folder = "CLEVPRNT/800/";
-            } else if (termcode == 0) {
+            } else if (termcode == "0") {
                 folder = "CLEVPRNT/000/";
-            } else if (termcode == 1) {
+            } else if (termcode == "1") {
                 folder = "CLEVPRNT/100/";
-            } else if (termcode == 2) {
+            } else if (termcode == "2") {
                 folder = "CLEVPRNT/200/";
-            } else if (termcode == 3) {
+            } else if (termcode == "3") {
                 folder = "CLEVPRNT/300/";
-            } else if (termcode == 4) {
+            } else if (termcode == "4") {
                 folder = "CLEVPRNT/400/";
-            } else if (termcode == 5) {
+            } else if (termcode == "5") {
                 folder = "CLEVPRNT/500/";
-            } else if (termcode == 6) {
+            } else if (termcode == "6") {
                 folder = "CLEVPRNT/600/";
-            } else if (termcode == 7) {
+            } else if (termcode == "7") {
                 folder = "CLEVPRNT/700/";
-            } else if (termcode == 8) {
+            } else if (termcode == "8") {
                 folder = "CLEVPRNT/800/";
-            } else if (termcode == 9) {
+            } else if (termcode == "9") {
                 folder = "CLEVPRNT/900/";
             } else if (termcode == "C") {
                 folder = "COST/";
@@ -585,9 +570,9 @@ $('#search-button').click(function(){
         } else if (termcount == 11 || termcount == 15 || termcount == 7 || termcount == 13) // 11&15=Normal B series search, 7=TPT Mode search, 13=TR SDs
         {
             //if (termsUP == "RM01A532460") {folder = "CLEVPRNT/500/";}            
-            if (termcode == "B") {
+            if (termcode == "B") { // Query is for B Series
                 folder = "CLEVPRNT/B_Series/";
-            } // Query is for B Series (TPT Mode)
+            }
             if (termcode4 != "B" && termcode != "A") {
                 if (termcode2 == "FS") {
                     folder = "CLEVPRNT/TorqueRods/FS/";
@@ -624,7 +609,7 @@ $('#search-button').click(function(){
                 folder = "CLEVPRNT/B_Series/";
             } // Query is for B Series (Normal Mode)
 
-            if (termcode4 == "A" && termcode2 != "SD" && termcode2 != "TX" && termcode2 != "MT" && termcode2 != "AT") {
+            if (termcode4 == "A" && termcode2 != "SD" && termcode2 != "TX" && termcode2 != "MT" && termcode2 != "AT" && termcode2 != "TS") {
                 if (termsUP == "RM01A532460") {
                     folder = "CLEVPRNT/500/";
                 } // Special exemption for material query - RM01A532460
@@ -636,61 +621,61 @@ $('#search-button').click(function(){
                         // "title": "fs_error",
                         // "msg": "fs_seriesGT_code"
                     // }, "*");
-                    if (termcode6 == 0) {
+                    if (termcode6 == "0") {
                         folder = "CLEVPRNT/000/";
                         termsUP = termcode7;
                     } // Sets folder and new search term minus GTC
-                    else if (termcode6 == 1) {
+                    else if (termcode6 == "1") {
                         folder = "CLEVPRNT/100/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 2) {
+                    } else if (termcode6 == "2") {
                         folder = "CLEVPRNT/200/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 3) {
+                    } else if (termcode6 == "3") {
                         folder = "CLEVPRNT/300/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 4) {
+                    } else if (termcode6 == "4") {
                         folder = "CLEVPRNT/400/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 5) {
+                    } else if (termcode6 == "5") {
                         folder = "CLEVPRNT/500/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 6) {
+                    } else if (termcode6 == "6") {
                         folder = "CLEVPRNT/600/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 7) {
+                    } else if (termcode6 == "7") {
                         folder = "CLEVPRNT/700/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 8) {
+                    } else if (termcode6 == "8") {
                         folder = "CLEVPRNT/800/";
                         termsUP = termcode7;
-                    } else if (termcode6 == 9) {
+                    } else if (termcode6 == "9") {
                         folder = "CLEVPRNT/900/";
                         termsUP = termcode7;
                     }
                 }
             }
             if (termcode2 == "SD") {
-                if (termcode6 == 0) {
+                if (termcode6 == "0") {
                     folder = "CLEVPRNT/000/";
                 } // Sets folder if it's a sales drawing of an A series part
-                else if (termcode6 == 1) {
+                else if (termcode6 == "1") {
                     folder = "CLEVPRNT/100/";
-                } else if (termcode6 == 2) {
+                } else if (termcode6 == "2") {
                     folder = "CLEVPRNT/200/";
-                } else if (termcode6 == 3) {
+                } else if (termcode6 == "3") {
                     folder = "CLEVPRNT/300/";
-                } else if (termcode6 == 4) {
+                } else if (termcode6 == "4") {
                     folder = "CLEVPRNT/400/";
-                } else if (termcode6 == 5) {
+                } else if (termcode6 == "5") {
                     folder = "CLEVPRNT/500/";
-                } else if (termcode6 == 6) {
+                } else if (termcode6 == "6") {
                     folder = "CLEVPRNT/600/";
-                } else if (termcode6 == 7) {
+                } else if (termcode6 == "7") {
                     folder = "CLEVPRNT/700/";
-                } else if (termcode6 == 8) {
+                } else if (termcode6 == "8") {
                     folder = "CLEVPRNT/800/";
-                } else if (termcode6 == 9) {
+                } else if (termcode6 == "9") {
                     folder = "CLEVPRNT/900/";
                 }
                 if (termcode4 == "B") {

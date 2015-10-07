@@ -20,7 +20,7 @@ self.on("message", function(addonMessage) {
         null);
 
     for (var i=0;i<links.snapshotLength;i++) {
-        var thisLink = links.snapshotItem(i);
+        thisLink = links.snapshotItem(i);
         if (thisLink.href == url_old) {
             thisLink.href = thisLink.href.replace(url_old, url_new);
             //console.log("REPLACED");

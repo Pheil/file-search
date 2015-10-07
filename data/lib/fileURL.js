@@ -103,31 +103,31 @@ function FSdisplay(terms) {
 
     // Start Part Code
     if (termcount == 5) {
-        if (termcode == 0) {
+        if (termcode == "0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode == 1) {
+        } else if (termcode == "1") {
             folder = "CLEVPRNT/100/";
         }
     } else if (termcount == 6) {
-        if (termcode == 0) {
+        if (termcode == "0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode == 1) {
+        } else if (termcode == "1") {
             folder = "CLEVPRNT/100/";
-        } else if (termcode == 2) {
+        } else if (termcode == "2") {
             folder = "CLEVPRNT/200/";
-        } else if (termcode == 3) {
+        } else if (termcode == "3") {
             folder = "CLEVPRNT/300/";
-        } else if (termcode == 4) {
+        } else if (termcode == "4") {
             folder = "CLEVPRNT/400/";
-        } else if (termcode == 5) {
+        } else if (termcode == "5") {
             folder = "CLEVPRNT/500/";
-        } else if (termcode == 6) {
+        } else if (termcode == "6") {
             folder = "CLEVPRNT/600/";
-        } else if (termcode == 7) {
+        } else if (termcode == "7") {
             folder = "CLEVPRNT/700/";
-        } else if (termcode == 8) {
+        } else if (termcode == "8") {
             folder = "CLEVPRNT/800/";
-        } else if (termcode == 9) {
+        } else if (termcode == "9") {
             folder = "CLEVPRNT/900/";
         } else if (termcode2 == "X0") {
             folder = "CLEVPRNT/000/";
@@ -271,25 +271,25 @@ function FSdisplay(terms) {
             folder = "CLEVPRNT/600/";
         } else if (termcode3 == "IM8") {
             folder = "CLEVPRNT/800/";
-        } else if (termcode == 0) {
+        } else if (termcode == "0") {
             folder = "CLEVPRNT/000/";
-        } else if (termcode == 1) {
+        } else if (termcode == "1") {
             folder = "CLEVPRNT/100/";
-        } else if (termcode == 2) {
+        } else if (termcode == "2") {
             folder = "CLEVPRNT/200/";
-        } else if (termcode == 3) {
+        } else if (termcode == "3") {
             folder = "CLEVPRNT/300/";
-        } else if (termcode == 4) {
+        } else if (termcode == "4") {
             folder = "CLEVPRNT/400/";
-        } else if (termcode == 5) {
+        } else if (termcode == "5") {
             folder = "CLEVPRNT/500/";
-        } else if (termcode == 6) {
+        } else if (termcode == "6") {
             folder = "CLEVPRNT/600/";
-        } else if (termcode == 7) {
+        } else if (termcode == "7") {
             folder = "CLEVPRNT/700/";
-        } else if (termcode == 8) {
+        } else if (termcode == "8") {
             folder = "CLEVPRNT/800/";
-        } else if (termcode == 9) {
+        } else if (termcode == "9") {
             folder = "CLEVPRNT/900/";
         } else if (termcode == "C") {
             folder = "COST/";
@@ -349,59 +349,59 @@ function FSdisplay(terms) {
             } // Special exemption for material query - RM01A532460
             else {
                 // Query is for A Series
-                if (termcode6 == 0) { // Sets folder and new search term minus GTC
+                if (termcode6 == "0") { // Sets folder and new search term minus GTC
                     folder = "CLEVPRNT/000/";
                     termsUP = termcode7;
-                } else if (termcode6 == 1) {
+                } else if (termcode6 == "1") {
                     folder = "CLEVPRNT/100/";
                     termsUP = termcode7;
-                } else if (termcode6 == 2) {
+                } else if (termcode6 == "2") {
                     folder = "CLEVPRNT/200/";
                     termsUP = termcode7;
-                } else if (termcode6 == 3) {
+                } else if (termcode6 == "3") {
                     folder = "CLEVPRNT/300/";
                     termsUP = termcode7;
-                } else if (termcode6 == 4) {
+                } else if (termcode6 == "4") {
                     folder = "CLEVPRNT/400/";
                     termsUP = termcode7;
-                } else if (termcode6 == 5) {
+                } else if (termcode6 == "5") {
                     folder = "CLEVPRNT/500/";
                     termsUP = termcode7;
-                } else if (termcode6 == 6) {
+                } else if (termcode6 == "6") {
                     folder = "CLEVPRNT/600/";
                     termsUP = termcode7;
-                } else if (termcode6 == 7) {
+                } else if (termcode6 == "7") {
                     folder = "CLEVPRNT/700/";
                     termsUP = termcode7;
-                } else if (termcode6 == 8) {
+                } else if (termcode6 == "8") {
                     folder = "CLEVPRNT/800/";
                     termsUP = termcode7;
-                } else if (termcode6 == 9) {
+                } else if (termcode6 == "9") {
                     folder = "CLEVPRNT/900/";
                     termsUP = termcode7;
                 }
             }
         }
         if (termcode2 == "SD") {
-            if (termcode6 == 0) { // Sets folder if it's a sales drawing of an A series part
+            if (termcode6 == "0") { // Sets folder if it's a sales drawing of an A series part
                 folder = "CLEVPRNT/000/";
-            } else if (termcode6 == 1) {
+            } else if (termcode6 == "1") {
                 folder = "CLEVPRNT/100/";
-            } else if (termcode6 == 2) {
+            } else if (termcode6 == "2") {
                 folder = "CLEVPRNT/200/";
-            } else if (termcode6 == 3) {
+            } else if (termcode6 == "3") {
                 folder = "CLEVPRNT/300/";
-            } else if (termcode6 == 4) {
+            } else if (termcode6 == "4") {
                 folder = "CLEVPRNT/400/";
-            } else if (termcode6 == 5) {
+            } else if (termcode6 == "5") {
                 folder = "CLEVPRNT/500/";
-            } else if (termcode6 == 6) {
+            } else if (termcode6 == "6") {
                 folder = "CLEVPRNT/600/";
-            } else if (termcode6 == 7) {
+            } else if (termcode6 == "7") {
                 folder = "CLEVPRNT/700/";
-            } else if (termcode6 == 8) {
+            } else if (termcode6 == "8") {
                 folder = "CLEVPRNT/800/";
-            } else if (termcode6 == 9) {
+            } else if (termcode6 == "9") {
                 folder = "CLEVPRNT/900/";
             }
             if (termcode4 == "B") {
