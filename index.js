@@ -5,7 +5,6 @@ var { Frame } = require("sdk/ui/frame");
 var notifications = require("sdk/notifications");
 var self = require("sdk/self");
 var _ = require("sdk/l10n").get;
-var windows = require("sdk/windows").browserWindows;
 const tabs = require("sdk/tabs");
 const panels = require("sdk/panel");
 var preferences = require("sdk/simple-prefs").prefs;
@@ -326,7 +325,7 @@ fs_panel.port.on("EPF", function (search) {
         var promise3 = OS.File.exists(partnum);
         promise3.then(
             function (existsValue) {
-                if (existsValue == true) {
+                if (existsValue === true) {
                     preferences.Part_Number = partnum.substring(4, 15);
                     fs_panel.hide();
                     tabs.open({
@@ -336,7 +335,7 @@ fs_panel.port.on("EPF", function (search) {
                         inBackground: false
                     });
                     return;
-                } else if (existsValue == false) {
+                } else if (existsValue === false) {
                     //This does not work due to looping through some that will be false AND some true
                     //preferences.Part_Number = "EPF_error";
                     return;
@@ -423,8 +422,20 @@ fs_panel.port.on("go_search", function (array) {
     console.log("URL: " + url + ", Term: " + term);
     var fileRequest = Request({
       url: url,
+      headers: {
+        'Cache-control': 'must-revalidate,max-age=3600'
+      },
       onComplete: function (response) {
-        transferComplete(term, url, "NA");
+        if (response.status = "200") {
+            transferComplete(term, url);
+        } else {
+            notifications.notify({
+                title: "File Search Error",
+                text: "The server returned error code: \n\n" + ' ' + response.statusText,
+                iconURL: myIconURL
+            });
+            console.error("Server Status: " + response.status);
+        }
       }
     });
     fileRequest.get();
@@ -434,7 +445,8 @@ fs_panel.port.on("go_search", function (array) {
 fs_panel.port.on("go_DV_search", function (array) {
     preferences.Part_Number_a = array[0];
     preferences.Part_Number_b = array[1];
-            
+    fs_panel.hide();
+    console.log("Private: " + privateBrowsing.isPrivate(windows));
     tabs.open({
         url: "about:dualview",
         isPinned: false,
@@ -470,19 +482,19 @@ function handleHide() {
   fs_panel.hide();
 }
 
-function readhttp(thename){
-    var httpRequest = Request({
-        url: thename,
-        headers: {
-            'Cache-control': 'no-cache'
-        },
-        onComplete: function (response) {
-            //console.log(response.text);
-            return response.text;
-        }
-    });
-    httpRequest.get();
-}
+// function readhttp(thename){
+    // var httpRequest = Request({
+        // url: thename,
+        // headers: {
+            // 'Cache-control': 'no-cache'
+        // },
+        // onComplete: function (response) {
+            // //console.log(response.text);
+            // return response.text;
+        // }
+    // });
+    // httpRequest.get();
+// }
 
 var PasteGo = ActionButton({
     id: "PasteGo-button",
@@ -497,8 +509,7 @@ var PasteGo = ActionButton({
             wltext,
             urlCHK = "";
 
-        if (pastetext)
-        {
+        if (pastetext) {
             console.log("Original paste & go value: '" + pastetext + "'");
             pastetext = pastetext.replace(/^[\r\n]+|[\r\n]+$/g, '');//Remove leading / trailing carriage returns / line feeds
         }
@@ -517,8 +528,7 @@ var PasteGo = ActionButton({
                 text: "Your clipboard contains no data.",
                 iconURL: myIconURL
             });
-        }
-        else {
+        } else {
             var url = urlCHK;
             wm = Cc["@mozilla.org/appshell/window-mediator;1"]
                 .getService(Ci.nsIWindowMediator),
@@ -551,21 +561,27 @@ var PasteGo = ActionButton({
 
           // Our URL isn't open. Open it now.
           if (!found) {
-            console.log("URL: " + url + ", Term: " + term);
+            console.log("URL: " + url + ", Term: " + pastetext);
             var fileRequest = Request({
               url: url,
+              headers: {
+                'Cache-control': 'must-revalidate,max-age=3600'
+              },
               onComplete: function (response) {
-                transferComplete(term, url, "NA");
+                    if (response.status = "200") {
+                        transferComplete(pastetext, url);
+                    } else {
+                        notifications.notify({
+                            title: "File Search Error",
+                            text: "The server returned error code: \n\n" + ' ' + response.statusText,
+                            iconURL: myIconURL
+                        });
+                        console.error("Server Status: " + response.status);
+                    }
               }
             });
             fileRequest.get();
           }
-            // tabs.open({
-                // url: urlCHK,
-                // isPinned: false,
-                // inNewWindow: false,
-                // inBackground: false
-            // }); 
         }
     }
 });
@@ -581,23 +597,27 @@ var email = ActionButton({
     onClick: logContentAsync
 });
 
-function DownloadFile(sLocalFileName, sRemoteFileName){
+function DownloadFile(sLocalFileName, sRemoteFileName) {
     var oIOService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService),
         oLocalFile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
     oLocalFile.initWithPath(sLocalFileName);
 
-    var oDownloadObserver = {onDownloadComplete: function(nsIDownloader, nsresult, oFile) {console.log('PDF downloaded, ready for email.')}};
+    var oDownloadObserver = {
+        onDownloadComplete: function(nsIDownloader, nsresult, oFile) {
+            console.log('PDF downloaded, ready for email.');
+        }
+    };
     var oDownloader = Cc["@mozilla.org/network/downloader;1"].createInstance();
     oDownloader.QueryInterface(Ci.nsIDownloader);
     oDownloader.init(oDownloadObserver, oLocalFile);
 
     var oHttpChannel = oIOService.newChannel(sRemoteFileName, "", null);
     oHttpChannel.QueryInterface(Ci.nsIHttpChannel);
-    oHttpChannel.asyncOpen(oDownloader, oLocalFile);   
+    oHttpChannel.asyncOpen(oDownloader, oLocalFile);
 }
                         
 function logContent(message) {
-    var n = occurrences(String(message.data.href), ".pdf"),
+    var n = occurrences(String(message.data.url.href), ".pdf"),
         open_PDF_name = "",
         open_PDF_name2 = "",
         pdf_dir,
@@ -607,7 +627,7 @@ function logContent(message) {
     
     if (n == 1) {
         //console.log(data_URL);  //Additional data available from var
-        open_PDF_name = message.data.href.match(/[a-zA-Z0-9-_]+\.pdf/i); //With .pdf
+        open_PDF_name = message.data.url.href.match(/[a-zA-Z0-9-_]+\.pdf/i); //With .pdf
         open_PDF_name2 = String(open_PDF_name).replace(/.pdf/i, ""); //Without .pdf
 
         // Sets dir to desktop.
@@ -616,7 +636,7 @@ function logContent(message) {
         d = new Date();
         df = "" + (d.getMonth() + 1) + d.getDate() + d.getFullYear();
         email_pdf = pdf_dir + "\\" + open_PDF_name2 + "_" + df + ".pdf";
-        DownloadFile(email_pdf,message.data.href);
+        DownloadFile(email_pdf,message.data.url.href);
 
         const myurl = "mailto://?subject=" + open_PDF_name2 + "%20Print&body=%0AAttached%20is%20the%20Tenneco%20" + open_PDF_name2 + "%20print.%20%20If%20you%20have%20any%20issues%20opening%20the%20file%20let%20me%20know%0A%0A&attach=" + email_pdf + "";
         
@@ -634,7 +654,7 @@ function logContent(message) {
     } else {
         notifications.notify({
             title: "File Search Error",
-            text: "Cannot save PDF from URL: \n\n" + ' ' + message.data,
+            text: "Cannot save PDF from URL: \n\n" + ' ' + message.data.url.href,
             iconURL: myIconURL
         });
         console.error("Cannot verify page URL contains PDF");
@@ -680,7 +700,7 @@ function Write_data(name, data){
     return deferred.promise;
 }
 
-//Download button not enabled since it should not needed any more
+//Download button not enabled since it should not be needed any more
 // var download = ActionButton({
     // id: "DL-button",
     // label: "File Search: Download current PDF",
@@ -693,29 +713,36 @@ function Write_data(name, data){
     // }
 // });
 
-function transferComplete(termsUP, url_to_open, url_to_open2) {
+function transferComplete(termsUP, url_to_open) {
+    //Does not work correctly with "always private" mode. - Bug 1026614
+    var windows = require("sdk/windows").browserWindows;
+    
     var tabprefs = preferences.TabFocus;
     var panelprefs = preferences.PanelClose;
-    
+
     if (panelprefs === true) {
         fs_panel.hide();
     }
 
     preferences.Part_Number_a = url_to_open;
     var Part_Num_type = preferences.Part_Num_type;
-    //windows.activeWindow doesn't seem to work properly
-    if (privateBrowsing.isPrivate(windows) === false) {
+    //console.log("Private: " + privateBrowsing.isPrivate(windows));
+    //console.log(privateBrowsing.isPrivate(windows.activeWindow));
+    var privateStatus = privateBrowsing.isPrivate(windows.activeWindow);
+    if (privateStatus === false) {
         if (tabprefs === false) { // Open tab w/o focus
             tabs.open({
                 url: url_to_open,
                 isPinned: false,
+                isPrivate: false,
                 inNewWindow: false,
                 inBackground: true
             });
-        } else if (tabprefs === true) { // Open tab and make active
+        } else { // Open active tab
             tabs.open({
                 url: url_to_open,
                 isPinned: false,
+                isPrivate: false,
                 inNewWindow: false,
                 inBackground: false
             });
@@ -729,7 +756,7 @@ function transferComplete(termsUP, url_to_open, url_to_open2) {
                 inNewWindow: false,
                 inBackground: true
             });
-        } else if (tabprefs === true) { // Open tab and make active
+        } else { // Open active tab
             tabs.open({
                 url: url_to_open,
                 isPinned: false,

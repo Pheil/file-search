@@ -2,11 +2,12 @@
   "title": "File Search",
   "id": "FileSearch@tenneco.com",
   "name": "file-search",
-  "version": "9.0.6",
+  "version": "9.0.7",
   "homepage": "http://tamilan.na.ten/cae/",
   "description": "Enter file names to easily display the file.  Works for the following files:  Drawing files (Parts), Costs, Specs, Tools, Sketches, Test Specs, Process Specs, Material Specs, Worksheets, Electronic Part Files and RFPs",
   "main": "index.js",
   "author": "Paul Heil",
+  "icon": "resource://FileSearch-at-tenneco-dot-com/data/images/icon-128.png",
   "updateURL": "http://170.64.172.81/scripts/FileSearch/update.rdf",
   "updateKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4eKexgL7FKgLzOWkC2QcZvY2IgvJKigq0pKWLql6OEz5ZjUPbqLmGYzCSfDnONoWl4BN2kYfGoKYJmqGVdKFbZlHeW7MZVjOXBNw7OixAX4YIvIWp5Z7EVhqTRRf9AU51M1+bT0oU4TuOtNHbfd7uHrepfdVOejXz+S0+tQnpniXb1+1UTvleQ9YODejFV0rA7mv1nCqBvg2JF4+op0gWwoMNiRa8c2fXiTjAWbhaysrlcgzToN2VTMpRVK6pQIfQsRFblJ/CsLnxwZLwBspXC+pqZEtV2VS4VP2o2vCD1M5HiSltBiCxOeLePs3NMTvmyPc9NyO1MjOIAhyadgylwIDAQAB",
   "permissions": {
