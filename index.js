@@ -443,16 +443,36 @@ fs_panel.port.on("go_search", function (array) {
 });
 
 fs_panel.port.on("go_DV_search", function (array) {
+    var windows = require("sdk/windows").browserWindows;
+    
     preferences.Part_Number_a = array[0];
     preferences.Part_Number_b = array[1];
     fs_panel.hide();
-    console.log("Private: " + privateBrowsing.isPrivate(windows));
-    tabs.open({
-        url: "about:dualview",
-        isPinned: false,
-        inNewWindow: false,
-        inBackground: false
-    });
+    var privateStatus = privateBrowsing.isPrivate(windows.activeWindow);
+    //console.log("Private: " + privateStatus);
+    if (privateStatus === false) {
+        tabs.open({
+            url: "about:dualview",
+            isPinned: false,
+            isPrivate: false,
+            inNewWindow: false,
+            inBackground: false
+        });
+    } else {
+        tabs.open({
+            url: "about:dualview",
+            isPinned: false,
+            isPrivate: true,
+            inNewWindow: false,
+            inBackground: false
+        });
+    }
+    // tabs.open({
+        // url: "about:dualview",
+        // isPinned: false,
+        // inNewWindow: false,
+        // inBackground: false
+    // });
 });
 
 DualViewmanager.addMessageListener("ready", function() {
