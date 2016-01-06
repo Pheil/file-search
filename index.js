@@ -17,22 +17,39 @@ const { ToggleButton } = require("sdk/ui/button/toggle");
 const utils = require('sdk/window/utils');
 const { defer } = require('sdk/core/promise');
 const { OS, TextEncoder, TextDecoder } = Cu.import("resource://gre/modules/osfile.jsm", {});
-//var sss = Cc['@mozilla.org/content/style-sheet-service;1'].getService(Ci.nsIStyleSheetService);
 Cu.import("resource://gre/modules/XPCOMUtils.jsm", this);
 Cu.import("resource://gre/modules/Services.jsm", this);
 Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/Task.jsm");
 Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/Promise.jsm");
+Cu.import("resource://gre/modules/RemotePageManager.jsm");
 
 var myIconURL = self.data.url("./images/icon.png");
 var fileURL = require("./data/lib/fileURL.js");
 //var fileLocal = require("./data/lib/fileLocal.js");
 var wl = require("./data/lib/whitelist.js");
 
-Cu.import("resource://gre/modules/RemotePageManager.jsm");
-let DualViewmanager = new RemotePages("about:dualview");
-let EPFViewmanager = new RemotePages("about:epfviewer");
+exports.main = function(options, callbacks) {
+    if (options.loadReason == "install" || options.loadReason == "startup") {
+        factory = new Factory(AboutDualView);
+        factory = new Factory(AboutEPFViewer);
+        registerRemotePages();
+    }
+}
+
+exports.onUnload = function (reason) {
+    if (reason == "shutdown") {
+        factory.unregister();
+        RemotePageManager.removeRemotePageListener("about:dualview");
+        RemotePageManager.removeRemotePageListener("about:epfviewer");
+    }
+};
+
+function registerRemotePages(){
+    let DualViewmanager = new RemotePages("about:dualview");
+    let EPFViewmanager = new RemotePages("about:epfviewer");
+}
 
 // Create a page mod for EPF page
 pageMod.PageMod({
@@ -247,23 +264,25 @@ fs_panel.port.on("data_load_mul", function () {
         return get(url);
     }
     var arr = [];
+    var dlNum = 1;
     
     getJSON('http://170.64.172.81/scripts/FileSearch/dataFiles.json').then(function(data) {
         //console.log(data);
         //Take an array of promises and wait on them all
         return Promise.all(
-            // Map our array of chapter urls to
-            // an array of chapter json promises
+            // Map our array of file urls to
+            // an array of file json promises
             data.fileUrls.map(getJSON2)
         );
     }).then(function(chapters) {
         //console.log(chapters);
-        // Now we have the chapters jsons in order! Loop through…
+        // Now we have the file jsons in order! Loop through…
         chapters.forEach(function(chapter) {
             //console.log(chapter);
             arr.push(chapter);
+            console.log("Suggestion file " + dlNum + " loaded.");
+            dlNum = dlNum+1;
         });
-        console.log("Done downloading search suggestions.");
     }).catch(function(err) {
         // catch any error that happened so far
         console.log("Argh, broken: " + err.message);
@@ -353,25 +372,31 @@ fs_panel.port.on("EPF", function (search) {
     }
 });
 
-EPFViewmanager.addMessageListener("get_pn", function() {
-    // Send saved PN to content script when requested
-    var PN_saved = preferences.Part_Number;
-    EPFViewmanager.sendAsyncMessage("thePN", PN_saved);
-});
-
-EPFViewmanager.addMessageListener("dir_check", function(directory) {
-    var epfDir = directory.data[0],
-        dir_int = directory.data[1],
-        file = Cc["@mozilla.org/file/local;1"].  
-                  createInstance(Ci.nsIFile);
-    file.initWithPath(epfDir);
-    children = file.directoryEntries;
-    dirList = [];
-    while (children.hasMoreElements()) {
-        child = children.getNext().QueryInterface(Ci.nsIFile);
-        dirList.push(child.leafName);
+pageMod.PageMod({
+    include: "about:epfviewer",
+    contentScriptWhen: 'end',
+    contentScriptFile: './js/EPFViewer.js',
+    onAttach: function(worker) {
+        worker.port.on("EPFViewer:get_pn", function() {  
+            // Send saved PN to content script when requested
+            var PN_saved = preferences.Part_Number;
+            worker.port.emit("EPFViewer:thePN", PN_saved);
+        }); 
+        worker.port.on("EPFViewer:dir_check", function(directory) {  
+            var epfDir = directory[0],
+                dir_int = directory[1],
+                file = Cc["@mozilla.org/file/local;1"].  
+                          createInstance(Ci.nsIFile);
+            file.initWithPath(epfDir);
+            children = file.directoryEntries;
+            dirList = [];
+            while (children.hasMoreElements()) {
+                child = children.getNext().QueryInterface(Ci.nsIFile);
+                dirList.push(child.leafName);
+            }
+            worker.port.emit("EPFViewer:thefiles" + dir_int, dirList);
+        });  
     }
-    EPFViewmanager.sendAsyncMessage("thefiles" + dir_int, dirList);
 });
 
 
@@ -423,7 +448,7 @@ fs_panel.port.on("go_search", function (array) {
     var fileRequest = Request({
       url: url,
       headers: {
-        'Cache-control': 'must-revalidate,max-age=3600'
+        'Cache-control': 'no-cache'
       },
       onComplete: function (response) {
         if (response.status = "200") {
@@ -475,11 +500,18 @@ fs_panel.port.on("go_DV_search", function (array) {
     // });
 });
 
-DualViewmanager.addMessageListener("ready", function() {
-    var a = preferences.Part_Number_a,
-        b = preferences.Part_Number_b,
-        array = new Array(a, b);
-    DualViewmanager.sendAsyncMessage("search", array);
+pageMod.PageMod({
+    include: "about:dualview",
+    contentScriptWhen: 'end',
+    contentScriptFile: './js/viewer.js',
+    onAttach: function(worker) {
+        worker.port.on("DualViewer:ready", function() {  
+            var a = preferences.Part_Number_a,
+                b = preferences.Part_Number_b,
+                array = new Array(a, b);
+            worker.port.emit("DualViewer:search", array);
+        });  
+    }
 });
 
 fs_panel.port.on("text-entered", function (text) {
@@ -585,7 +617,7 @@ var PasteGo = ActionButton({
             var fileRequest = Request({
               url: url,
               headers: {
-                'Cache-control': 'must-revalidate,max-age=3600'
+                'Cache-control': 'no-cache'
               },
               onComplete: function (response) {
                     if (response.status = "200") {
@@ -637,7 +669,8 @@ function DownloadFile(sLocalFileName, sRemoteFileName) {
 }
                         
 function logContent(message) {
-    var n = occurrences(String(message.data.url.href), ".pdf"),
+    var search_url = message.data.url.href.toUpperCase(),
+        n = occurrences(String(search_url), ".PDF"),
         open_PDF_name = "",
         open_PDF_name2 = "",
         pdf_dir,
@@ -647,7 +680,7 @@ function logContent(message) {
     
     if (n == 1) {
         //console.log(data_URL);  //Additional data available from var
-        open_PDF_name = message.data.url.href.match(/[a-zA-Z0-9-_]+\.pdf/i); //With .pdf
+        open_PDF_name = search_url.match(/[a-zA-Z0-9-_]+\.pdf/i); //With .pdf
         open_PDF_name2 = String(open_PDF_name).replace(/.pdf/i, ""); //Without .pdf
 
         // Sets dir to desktop.
@@ -720,7 +753,7 @@ function Write_data(name, data){
     return deferred.promise;
 }
 
-//Download button not enabled since it should not be needed any more
+//Download button not enabled since it should not be needed anymore
 // var download = ActionButton({
     // id: "DL-button",
     // label: "File Search: Download current PDF",
@@ -788,32 +821,28 @@ function transferComplete(termsUP, url_to_open) {
     }
 }
 
-//Example sending info too toolbar
-//AdvancedMenu.postMessage("Super_array", preferences.Super_array);
-
 // 7ad46da2-15c9-11e5-b939-0800200c9a66 - open
 // 7ad46da3-15c9-11e5-b939-0800200c9a66 - open
 
-const aboutDualViewContract = "@mozilla.org/network/protocol/about;1?what=dualview";
-const aboutDualViewDescription = "About Dual View";
-const aboutDualViewUUID = components.ID("7ad46da0-15c9-11e5-b939-0800200c9a66");
+Cm.QueryInterface(Ci.nsIComponentRegistrar);
 
-const aboutEPFViewerContract = "@mozilla.org/network/protocol/about;1?what=epfviewer";
-const aboutEPFViewerDescription = "About EPF Viewer";
-const aboutEPFViewerUUID = components.ID("7ad46da1-15c9-11e5-b939-0800200c9a66");
+// globals
+var factory;
+const aboutDualViewDescription = 'About Dual View';
+const aboutDualViewUUID = '7ad46da0-15c9-11e5-b939-0800200c9a66';
+const aboutDualView_word = 'dualview';
+const aboutDualView_page = "resource://FileSearch-at-tenneco-dot-com/data/viewer.html";
 
-// about:dualview factory
-let aboutDualViewFactory = {
-    createInstance: function(outer, iid) {
-        if (outer !== null)
-            throw Cr.NS_ERROR_NO_AGGREGATION;
+const aboutEPFViewerDescription = 'About EPF Viewer';
+const aboutEPFViewerUUID = '7ad46da1-15c9-11e5-b939-0800200c9a66';
+const aboutEPFViewer_word = 'epfviewer';
+const aboutEPFViewer_page = "resource://FileSearch-at-tenneco-dot-com/data/EPFViewer.html";
 
-        return aboutDualView.QueryInterface(iid);
-    }
-};
-
-// about:dualview
-let aboutDualView = {
+function AboutDualView() {}
+AboutDualView.prototype = Object.freeze({
+    classDescription: aboutDualViewDescription,
+    contractID: '@mozilla.org/network/protocol/about;1?what=' + aboutDualView_word,
+    classID: components.ID('{' + aboutDualViewUUID + '}'),
     QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule]),
 
     getURIFlags: function(aURI) {
@@ -821,28 +850,19 @@ let aboutDualView = {
     },
 
     newChannel: function(aURI) {
-        if (aURI.spec != "about:dualview")
+        if (aURI.spec != "about:" + aboutDualView_word)
             return;
 
-        let uri = Services.io.newURI("resource://FileSearch-at-tenneco-dot-com/data/viewer.html", null, null);
+        let uri = Services.io.newURI(aboutDualView_page, null, null);
         return Services.io.newChannelFromURI(uri);
     }
-};
-Cm.QueryInterface(Ci.nsIComponentRegistrar).
-registerFactory(aboutDualViewUUID, aboutDualViewDescription, aboutDualViewContract, aboutDualViewFactory);
+});
 
-// about:epfviewer factory
-let aboutEPFViewerFactory = {
-    createInstance: function(outer, iid) {
-        if (outer !== null)
-            throw Cr.NS_ERROR_NO_AGGREGATION;
-
-        return aboutEPFViewer.QueryInterface(iid);
-    }
-};
-
-// about:epfviewer
-let aboutEPFViewer = {
+function AboutEPFViewer() {}
+AboutEPFViewer.prototype = Object.freeze({
+    classDescription: aboutEPFViewerDescription,
+    contractID: '@mozilla.org/network/protocol/about;1?what=' + aboutEPFViewer_word,
+    classID: components.ID('{' + aboutEPFViewerUUID + '}'),
     QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule]),
 
     getURIFlags: function(aURI) {
@@ -850,12 +870,27 @@ let aboutEPFViewer = {
     },
 
     newChannel: function(aURI) {
-        if (aURI.spec != "about:epfviewer")
+        if (aURI.spec != "about:" + aboutEPFViewer_word)
             return;
 
-        let uri = Services.io.newURI("resource://FileSearch-at-tenneco-dot-com/data/EPFViewer.html", null, null);
+        let uri = Services.io.newURI(aboutEPFViewer_page, null, null);
         return Services.io.newChannelFromURI(uri);
     }
-};
-Cm.QueryInterface(Ci.nsIComponentRegistrar).
-registerFactory(aboutEPFViewerUUID, aboutEPFViewerDescription, aboutEPFViewerContract, aboutEPFViewerFactory);
+});
+
+function Factory(component) {
+    this.createInstance = function(outer, iid) {
+        if (outer) {
+            throw Cr.NS_ERROR_NO_AGGREGATION;
+        }
+        return new component();
+    };
+    this.register = function() {
+        Cm.registerFactory(component.prototype.classID, component.prototype.classDescription, component.prototype.contractID, this);
+    };
+    this.unregister = function() {
+        Cm.unregisterFactory(component.prototype.classID, this);
+    }
+    Object.freeze(this);
+    this.register();
+}

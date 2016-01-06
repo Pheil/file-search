@@ -40,7 +40,8 @@ function wlCompare(searchTerm) {
     '228240',
     '228250',
     '228260',
-    '228270');
+    '228270',
+    '683090');
 
     var matchlist = new Array(
     '854090',
@@ -82,7 +83,8 @@ function wlCompare(searchTerm) {
     '228200',
     '228200',
     '228200',
-    '228200');
+    '228200',
+    '683080');
     
     for (var i = 0; i < whitelist.length; i++)
     {

@@ -383,10 +383,9 @@ function folder_check(e) {
 
     return e;
 }
-    
-sendAsyncMessage("ready");
-addMessageListener("search", function(array) {
-    var searcharray = array.data;
+self.port.emit("DualViewer:ready");
+self.port.on("DualViewer:search", function(array) {
+    var searcharray = array;
     var PN_saved_a = searcharray[1];
     var PN_saved_b = searcharray[0];
 
@@ -398,9 +397,7 @@ addMessageListener("search", function(array) {
 
     document.getElementById("LHdwg").setAttribute("data", PN_saved_a);
     document.getElementById("RHdwg").setAttribute("data", PN_saved_b);
-    //document.getElementById("LHdwg").QueryInterface(Components.interfaces.nsIObjectLoadingContent).playPlugin();   // Forge enable plugin
-    //document.getElementById("RHdwg").QueryInterface(Components.interfaces.nsIObjectLoadingContent).playPlugin();   // Forge enable plugin
-    
+
 });
 
 
