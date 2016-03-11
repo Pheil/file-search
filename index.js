@@ -1,6 +1,6 @@
 var { ActionButton } = require('sdk/ui/button/action');
 const pageMod = require("sdk/page-mod");
-var { Toolbar } = require("sdk/ui/toolbar");
+//var { Toolbar } = require("sdk/ui/toolbar");
 var { Frame } = require("sdk/ui/frame");
 var notifications = require("sdk/notifications");
 var self = require("sdk/self");
@@ -25,7 +25,7 @@ Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/Promise.jsm");
 Cu.import("resource://gre/modules/RemotePageManager.jsm");
 
-var myIconURL = self.data.url("./images/icon.png");
+var myIconURL = self.data.url("./images/icon-64.png");
 var fileURL = require("./data/lib/fileURL.js");
 //var fileLocal = require("./data/lib/fileLocal.js");
 var wl = require("./data/lib/whitelist.js");
@@ -213,13 +213,13 @@ var fs_panel = panels.Panel({
     onHide: handleHide,
     //onShow: handleShow,
     contentScriptWhen: 'end',
-    contentScriptFile: ["./lib/jquery-2.1.4.min.js",
+    contentScriptFile: ["./lib/jquery-2.2.1.min.js",
                       "./lib/typeahead.bundle.js",
                       "./js/searchMenu.js"]
 });
 
 fs_panel.on("show", function() {
-    fs_panel.port.emit("show");
+    fs_panel.port.emit("FileSearch-at-tenneco-dot-com:show");
 });
 
 // fs_panel.port.on("data_load", function () {
@@ -236,14 +236,14 @@ fs_panel.on("show", function() {
     // httpRequest.get();
 // });
 
-fs_panel.port.on("data_load_mul", function () {
+fs_panel.port.on("FileSearch-at-tenneco-dot-com:data_load_mul", function () {
     //THIS DOES WORK
     function get(url) {
         var requestPromise = new Promise(function(resolve, reject) {
             var httpRequest = Request({
                 url: url,
                 headers: {
-                    'Cache-control': 'no-cache'
+                    'Cache-control': 'max-age=0'
                 },
                 onComplete: function (response) {
                     resolve(response.text);
@@ -287,12 +287,11 @@ fs_panel.port.on("data_load_mul", function () {
         // catch any error that happened so far
         console.log("Argh, broken: " + err.message);
     }).then(function() {
-        fs_panel.port.emit("rtn_data_mul", arr);
+        fs_panel.port.emit("FileSearch-at-tenneco-dot-com:rtn_data_mul", arr);
     }); 
-//fs_panel.port.emit("rtn_data_mul");  
 });
 
-fs_panel.port.on("empty", function () {
+fs_panel.port.on("FileSearch-at-tenneco-dot-com:empty", function () {
     notifications.notify({
         title: "File Search Error",
         text: "You must enter a search value!" ,
@@ -314,7 +313,7 @@ function onPrefChange(prefName) {
 }
 require("sdk/simple-prefs").on(preferences.Part_Number, onPrefChange);
 
-fs_panel.port.on("EPF", function (search) {
+fs_panel.port.on("FileSearch-at-tenneco-dot-com:EPF", function (search) {
     preferences.Part_Number = "";
     var pnSearch = search,
         pnCount = pnSearch.length,
@@ -400,7 +399,7 @@ pageMod.PageMod({
 });
 
 
-fs_panel.port.on("unknown", function (search) {
+fs_panel.port.on("FileSearch-at-tenneco-dot-com:unknown", function (search) {
     notifications.notify({
         title: "File Search Error",
         text: "Cannot determine path for '" + search + "'." ,
@@ -408,7 +407,7 @@ fs_panel.port.on("unknown", function (search) {
     });
 });
 
-fs_panel.port.on("go_search", function (array) {
+fs_panel.port.on("FileSearch-at-tenneco-dot-com:go_search", function (array) {
     var folder = array[0],
         url = array[1],
         term = array[2],
@@ -448,7 +447,7 @@ fs_panel.port.on("go_search", function (array) {
     var fileRequest = Request({
       url: url,
       headers: {
-        'Cache-control': 'no-cache'
+        'Cache-control': 'max-age=0'
       },
       onComplete: function (response) {
         if (response.status = "200") {
@@ -467,7 +466,7 @@ fs_panel.port.on("go_search", function (array) {
   }
 });
 
-fs_panel.port.on("go_DV_search", function (array) {
+fs_panel.port.on("FileSearch-at-tenneco-dot-com:go_DV_search", function (array) {
     var windows = require("sdk/windows").browserWindows;
     
     preferences.Part_Number_a = array[0];
@@ -514,10 +513,10 @@ pageMod.PageMod({
     }
 });
 
-fs_panel.port.on("text-entered", function (text) {
-    console.log(text);
-    fs_panel.hide();
-});
+//fs_panel.port.on("text-entered", function (text) {
+//    console.log(text);
+//    fs_panel.hide();
+//});
 
 function handleChange(state) {
   if (state.checked) {
@@ -617,7 +616,7 @@ var PasteGo = ActionButton({
             var fileRequest = Request({
               url: url,
               headers: {
-                'Cache-control': 'no-cache'
+                'Cache-control': 'max-age=0'
               },
               onComplete: function (response) {
                     if (response.status = "200") {
@@ -846,7 +845,7 @@ AboutDualView.prototype = Object.freeze({
     QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule]),
 
     getURIFlags: function(aURI) {
-        return Ci.nsIAboutModule.ALLOW_SCRIPT;
+        return Ci.nsIAboutModule.ALLOW_SCRIPT, Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
     },
 
     newChannel: function(aURI) {
@@ -866,7 +865,7 @@ AboutEPFViewer.prototype = Object.freeze({
     QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule]),
 
     getURIFlags: function(aURI) {
-        return Ci.nsIAboutModule.ALLOW_SCRIPT;
+        return Ci.nsIAboutModule.ALLOW_SCRIPT, Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
     },
 
     newChannel: function(aURI) {

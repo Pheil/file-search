@@ -1,4 +1,4 @@
-self.port.on("show", function onShow() {    
+self.port.on("FileSearch-at-tenneco-dot-com:show", function onShow() {    
     $('#searchx').focus();
     $('#searchx').select();
 });
@@ -60,8 +60,8 @@ self.port.on("show", function onShow() {
   
 //twitter typeahead - multiple sources
 //Using prefetch causes UI delay on start - do not use
-    self.port.emit("data_load_mul");
-    self.port.once("rtn_data_mul",
+    self.port.emit("FileSearch-at-tenneco-dot-com:data_load_mul");
+    self.port.once("FileSearch-at-tenneco-dot-com:rtn_data_mul",
         function datasmash(theArray) {  //add theArray to function then uncomment to use data from index.js
             var parseddataB = theArray[0],
                 parseddataC = theArray[1],
@@ -299,7 +299,7 @@ self.port.on("show", function onShow() {
     
 $('#EPF-button').click(function(){
     var terms = window.document.getElementById("searchx").value;
-    self.port.emit("EPF", terms);
+    self.port.emit("FileSearch-at-tenneco-dot-com:EPF", terms);
 });
 
 $('#searchx').keypress(function(e){
@@ -315,7 +315,7 @@ $('#search-button').click(function(){
     if (terms === "" || terms === void(0) || terms === null) //Search without a search term
     {
         //Empty search error
-        self.port.emit("empty");
+        self.port.emit("FileSearch-at-tenneco-dot-com:empty");
         return;
     }
 
@@ -644,12 +644,7 @@ $('#search-button').click(function(){
                     } // Special exemption for material query - RM01A532460
                     else {
                         // Query is for A Series
-                        self.port.emit("aGTC");
-                        // window.parent.postMessage({
-                            // "type": "error",
-                            // "title": "fs_error",
-                            // "msg": "fs_seriesGT_code"
-                        // }, "*");
+                        //self.port.emit("aGTC");
                         if (termcode6 == "0") {
                             folder = "CLEVPRNT/000/";
                             termsUP = termcode7;
@@ -749,7 +744,7 @@ $('#search-button').click(function(){
         var url_to_open2 = "";
         if (folder == "UNKNOWN") { // Unknown search term error
             console.log("File Search: Unknown folder");
-            self.port.emit("unknown", termsUP);
+            self.port.emit("FileSearch-at-tenneco-dot-com:unknown", termsUP);
             return;
         }
         if (folder == "Design_Manual/") {
@@ -761,7 +756,7 @@ $('#search-button').click(function(){
         }
         //Send request to main process
         var array = new Array(folder, url_to_open2, termsUP);
-        self.port.emit("go_search", array);
+        self.port.emit("FileSearch-at-tenneco-dot-com:go_search", array);
     }
 
     function DVdisplay() {
@@ -771,7 +766,7 @@ $('#search-button').click(function(){
             b = darray[1];
         console.log("Dual View: Requesting '" + a + "' & '" + b + "'");
         var array = new Array(a, b);
-        self.port.emit("go_DV_search", array);
+        self.port.emit("FileSearch-at-tenneco-dot-com:go_DV_search", array);
         return;
     }
 }); 
